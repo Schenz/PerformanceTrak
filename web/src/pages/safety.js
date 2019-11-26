@@ -11,4 +11,4 @@ const Safety = () => (
   </Layout>
 )
 
-export default BestPractices
+export default Safety

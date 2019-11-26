@@ -1,4 +1,4 @@
-//import { Link } from "gatsby"
+import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
 import Logo from "./images/logo.png"
@@ -15,27 +15,27 @@ const Header = ({ siteTitle }) => (
 				      <span class="icon-bar"></span>
 				      <span class="icon-bar"></span>
 				    </button>
-            <a class="navbar-brand" href="/"><img src={Logo} alt="PerformanceTrak" /></a>
+            <Link class="navbar-brand" to="/"><img src={Logo} alt="PerformanceTrak" /></Link>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li class="active"><a href="/">Home</a></li>
+              <li class="active"><Link to="/">Home</Link></li>
               <li class="dropdown yamm-fw hasmenu">
-                <a href="#top" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products <span class="fa fa-angle-down"></span></a>
+                <Link to="#top" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products <span class="fa fa-angle-down"></span></Link>
                 <ul class="dropdown-menu">
                   <li>
                     <div class="yamm-content">
                       <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                           <ul>
-                            <li><a href="/Rewards/">Rewards</a></li>
-                            <li><a href="/PeerToPeer/">Peer to Peer</a></li>
-                            <li><a href="/PerformanceImprovement/">Performance Improvement</a></li>
-                            <li><a href="/BestPractices/">Best Practices</a></li>
-                            <li><a href="/YearsOfService/">Years Of Service</a></li>
-                            <li><a href="/Safety/">Safety</a></li>
-                            <li><a href="/Health/">Health</a></li>
-                            <li><a href="/ContributionBonus/">Contribution Bonus</a></li>
+                            <li><Link to="/rewards/">Rewards</Link></li>
+                            <li><Link to="/peertopeer/">Peer to Peer</Link></li>
+                            <li><Link to="/performanceimprovement/">Performance Improvement</Link></li>
+                            <li><Link to="/bestpractices/">Best Practices</Link></li>
+                            <li><Link to="/yearsofservice/">Years Of Service</Link></li>
+                            <li><Link to="/safety/">Safety</Link></li>
+                            <li><Link to="/health/">Health</Link></li>
+                            <li><Link to="/contributionbonus/">Contribution Bonus</Link></li>
                           </ul>
                         </div>
                       </div>
@@ -43,8 +43,8 @@ const Header = ({ siteTitle }) => (
                   </li>
                 </ul>
               </li>
-              <li><a href="/Contact/">Contact us</a></li>
-              <li><a href="/Signin/">Sign In</a></li>
+              <li><Link to="/contact/">Contact us</Link></li>
+              <li><Link to="/signin/">Sign In</Link></li>
             </ul>
           </div>
         </div>

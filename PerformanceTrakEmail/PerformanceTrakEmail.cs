@@ -47,7 +47,7 @@ namespace PerformanceTrakEmail
             catch (System.Exception ex)
             {
                 log.LogError(ex, "Error While Sending Email");
-                return new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+                return new BadRequestObjectResult("Error While Sending Email");
             }
         }
 
@@ -76,14 +76,5 @@ namespace PerformanceTrakEmail
 
             return builder.ToString();
         }
-    }
-
-    internal class EmailObject
-    {
-        public string Subject { get; set; }
-        public string Email { get; set; }
-        public string FullName { get; set; }
-        public string Phone { get; set; }
-        public string Message { get; set; }
     }
 }

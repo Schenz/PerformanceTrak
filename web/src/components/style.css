@@ -436,7 +436,7 @@ SECTION
 
 .section {
     background-color: #ffffff;
-    padding: 10rem 0;
+    padding: 1rem 0;
     position: relative;
     display: block;
     overflow: hidden;
@@ -447,8 +447,8 @@ SECTION
 }
 
 .transheader {
-    padding-top: 220px;
-    min-height: 500px;
+    padding-top: 10px;
+    min-height: 30px;
 }
 
 .homepage.transheader {
@@ -2636,8 +2636,8 @@ FOOTER
 
 .footer.primary-footer {
     background-color: #0b509e;
-    padding-bottom: 40px;
-    padding-top: 53px;
+    padding-bottom: 10px;
+    padding-top: 15px;
 }
 
 .footer.secondary-footer {

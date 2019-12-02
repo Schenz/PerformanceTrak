@@ -4,29 +4,29 @@ import React from "react"
 import Logo from "./images/logo.png"
 
 const Header = ({ siteTitle }) => (
-  <header class="header site-header">
-    <div class="container">
-      <nav class="navbar navbar-default yamm">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				      <span class="sr-only">Toggle navigation</span>
-				      <span class="icon-bar"></span>
-				      <span class="icon-bar"></span>
-				      <span class="icon-bar"></span>
+  <header className="header site-header">
+    <div className="container">
+      <nav className="navbar navbar-default yamm">
+        <div className="container-fluid">
+          <div className="navbar-header">
+            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				      <span className="sr-only">Toggle navigation</span>
+				      <span className="icon-bar"></span>
+				      <span className="icon-bar"></span>
+				      <span className="icon-bar"></span>
 				    </button>
-            <Link class="navbar-brand" to="/"><img src={Logo} alt="PerformanceTrak" /></Link>
+            <Link className="navbar-brand" to="/"><img src={Logo} alt="PerformanceTrak" /></Link>
           </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-              <li class="active"><Link to="/">Home</Link></li>
-              <li class="dropdown yamm-fw hasmenu">
-                <Link to="#top" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products <span class="fa fa-angle-down"></span></Link>
-                <ul class="dropdown-menu">
+          <div id="navbar" className="navbar-collapse collapse">
+            <ul className="nav navbar-nav navbar-right">
+              <li className="active"><Link to="/">Home</Link></li>
+              <li className="dropdown yamm-fw hasmenu">
+                <Link to="#top" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products <span className="fa fa-angle-down"></span></Link>
+                <ul className="dropdown-menu">
                   <li>
-                    <div class="yamm-content">
-                      <div class="row">
-                        <div class="col-md-12">
+                    <div className="yamm-content">
+                      <div className="row">
+                        <div className="col-md-12">
                           <ul>
                             <li><Link to="/rewards/">Rewards</Link></li>
                             <li><Link to="/peertopeer/">Peer to Peer</Link></li>

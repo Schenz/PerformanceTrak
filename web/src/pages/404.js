@@ -6,12 +6,12 @@ import SEO from "../components/seo"
 const NotFoundPage = () => (
   <Layout>
     <SEO title="404: Not found" />
-    <section class="section">
-		  <div class="container">
-			  <div class="row text-center">
-				  <div class="col-md-12 notfound">
+    <section className="section">
+		  <div className="container">
+			  <div className="row text-center">
+				  <div className="col-md-12 notfound">
 					  <h2>404</h2>
-						<p class="lead">Sorry we could not reach the page you were looking for. <br />Content has been deleted or modified.</p>
+						<p className="lead">Sorry we could not reach the page you were looking for. <br />Content has been deleted or modified.</p>
 					</div>
 				</div>
 			</div>

@@ -1,7 +1,15 @@
 terraform {
   required_version = ">= 0.11"
 
-  backend "azurerm" {}
+  backend "azurerm" {
+    storage_account_name = "performancetrak"
+    container_name       = "terraform-state"
+    key                  = "prod.terraform.tfstate"
+
+    # rather than defining this inline, the Access Key can also be sourced
+    # from an Environment Variable - more information is available below.
+    access_key = "YOiv5jh9JdZZQNjOo8VXuV4YS5PTPy3le1qlhieLZbaszbr/0D3V4hHL+NrsQ1WKhqEwNSpghqJQxqEtNMkvAg=="
+  }
 }
 
 # Configure the Microsoft Azure Provider

@@ -15,7 +15,7 @@ steps:
   displayName: 'install gatsby'
 
 - script: |
-    cd gatsby-site
+    cd web
     npm install
     npx gatsby build
   displayName: 'gatsby build'

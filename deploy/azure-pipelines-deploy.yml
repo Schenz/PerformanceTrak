@@ -17,7 +17,7 @@ steps:
 - task: DownloadBuildArtifacts@0
   inputs:
     buildType: 'specific' # Options: current, specific
-    project: 'brandon' # Required when buildType == Specific
+    project: 'PerformanceTrak' # Required when buildType == Specific
     pipeline: 'build-site' # Required when buildType == Specific
     #specificBuildWithTriggering: false # Optional
     #buildVersionToDownload: 'latest' # Required when buildType == Specific# Options: latest, latestFromBranch, specific

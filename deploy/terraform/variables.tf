@@ -1,9 +1,9 @@
 variable "dns_name" {
-  description = "Label for the Domain Name. Will be used to make up the FQDN."
+  description = "performancetrak"
 }
 
 variable "rg-name" {
-  default = "perforamncetrak"
+  default = "performancetrak"
 }
 
 variable "location" {

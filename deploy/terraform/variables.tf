@@ -3,7 +3,7 @@ variable "dns_name" {
 }
 
 variable "rg-name" {
-  default = "demogatsbyrg"
+  default = "perforamncetrak"
 }
 
 variable "location" {

@@ -7,5 +7,5 @@ variable "rg-name" {
 }
 
 variable "location" {
-  default = "EastUS2"
+  default = "West US"
 }

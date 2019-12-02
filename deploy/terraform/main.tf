@@ -8,7 +8,7 @@ terraform {
 provider "azurerm" {}
 
 # Create a resource group if it doesn’t exist
-resource "azurerm_resource_group" "demo-rg" {
+resource "azurerm_resource_group" "perforamncetrak" {
   name     = "${var.rg-name}"
   location = "${var.location}"
 }

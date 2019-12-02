@@ -17,8 +17,8 @@ steps:
 - task: DownloadBuildArtifacts@0
   inputs:
     buildType: 'specific' # Options: current, specific
-    project: 'gatsby-blog' # Required when buildType == Specific
-    pipeline: 'great-gasby-blog' # Required when buildType == Specific
+    project: 'performancetrak' # Required when buildType == Specific
+    pipeline: 'build-site' # Required when buildType == Specific
     #specificBuildWithTriggering: false # Optional
     #buildVersionToDownload: 'latest' # Required when buildType == Specific# Options: latest, latestFromBranch, specific
     #branchName: 'refs/heads/master' # Required when buildType == Specific && BuildVersionToDownload == LatestFromBranch

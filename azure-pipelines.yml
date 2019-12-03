@@ -16,7 +16,7 @@ steps:
 
 - script: |
     cd web
-    npx gatsby build
+    gatsby build
   displayName: 'gatsby build'
 
 - task: CopyFiles@2

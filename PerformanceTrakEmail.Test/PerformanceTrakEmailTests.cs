@@ -33,7 +33,7 @@ namespace PerformanceTrakEmail.Test
         [TestMethod]
         public void TestGoodRequest()
         {
-            SetEnvironmentVariables();
+            //SetEnvironmentVariables();
             
             Task.Run(async () =>
             {
@@ -63,31 +63,9 @@ namespace PerformanceTrakEmail.Test
             Environment.SetEnvironmentVariable("SendGridApiKey", null);
         }
 
-        public void SetEnvironmentVariables()
-        {
-            using (var launchSettingsFile = File.OpenText("Properties/launchSettings.json"))
-            {
-                // Load environment variables from json configuration file
-                JsonTextReader jsonReader = new JsonTextReader(reader: launchSettingsFile);
-                JObject jsonObject = JObject.Load(reader: jsonReader);
-
-                // Get variables from config file into List
-                List<JProperty> envVariables = jsonObject
-                    .GetValue("profiles")
-                    .SelectMany(profiles => profiles.Children())
-                    .SelectMany(profile => profile.Children<JProperty>())
-                    .Where(property => property.Name == "environmentVariables")
-                    .SelectMany(property => property.Value.Children<JProperty>())
-                    .ToList();
-
-                // Manually set each variable read from config file
-                envVariables.ForEach(variable =>
-                {
-                    Environment.SetEnvironmentVariable(
-                        variable: variable.Name,
-                        value: variable.Value.ToString());
-                });
-            }
-        }
+        //public void SetEnvironmentVariables()
+        //{
+            //Environment.SetEnvironmentVariable("SendGridApiKey", "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");
+        //}
     }
 }

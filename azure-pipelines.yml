@@ -16,6 +16,7 @@ steps:
 
 - script: |
     cd web
+    npm install
     gatsby build
   displayName: 'gatsby build'
 

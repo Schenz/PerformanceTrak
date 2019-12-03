@@ -331,3 +331,6 @@ ASALocalRun/
 .mfractor/
 
 .DS_Store
+
+# Azure Functions localsettings file
+local.settings.json

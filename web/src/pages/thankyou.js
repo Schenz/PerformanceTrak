@@ -4,19 +4,19 @@ import { Link } from "gatsby"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
-const Signin = () => (
+const ThankYou = () => (
   <Layout>
-    <SEO title="Signin" />
+    <SEO title="Thank You" />
     <section className="section overfree">
       <div className="container">
         <div className="section-title text-center">
-          <h3>Coming Soon!</h3>
+          <h3>Thank you!</h3>
           <hr />
-          <p className="lead">Please check back later as this feature is coming soon!</p>
+          <p className="lead">We have received your message and someone will get back with you as soon as possible.</p>
         </div>
       </div>
     </section>
   </Layout>
 )
 
-export default Signin
+export default ThankYou

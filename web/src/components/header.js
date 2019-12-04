@@ -14,7 +14,7 @@ export default class Header extends React.Component {
     } else if (pathName === "/signin/") {
       listItem = document.querySelector("#navSignin")
       listItem.classList.add("active");
-    } else if (pathName === "/contact/") {
+    } else if (pathName === "/contact/" || pathName === "/thankyou/") {
       listItem = document.querySelector("#navContact")
       listItem.classList.add("active");
     } else {

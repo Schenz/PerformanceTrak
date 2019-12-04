@@ -18,6 +18,7 @@ const Safety = () => (
                         contributing to meeting the safety goals of the company
                         while increasing productivity and profits.
                     </p>
+                    <p></p>
                     <p className="lead">
                         Use our platform to design your program structure, track
                         progress toward your goals, and display rewards and

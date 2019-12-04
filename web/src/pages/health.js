@@ -16,6 +16,7 @@ const Health = () => (
                         lifestyles. Create custom health and wellness
                         initiatives to meet your business goals.
                     </p>
+                    <p></p>
                     <p className="lead">
                         Use our platform to design your program structure, track
                         progress for wellness goals, and display rewards and

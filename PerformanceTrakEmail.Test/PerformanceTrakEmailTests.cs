@@ -27,8 +27,6 @@ namespace PerformanceTrakEmail.Test
         [TestMethod]
         public void TestGoodRequest()
         {
-            //SetEnvironmentVariables();
-            
             Task.Run(async () =>
             {
                 var request = TestFactory.CreateHttpRequest("{\"Subject\":\"Please Help\",\"Email\":\"brandon.schenz@kroger.com\",\"Phone\":\"513.204.9321\",\"FullName\":\"Brandon Schenz\",\"Message\":\"I need more info RIGHT away!\"}");

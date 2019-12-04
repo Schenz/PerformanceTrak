@@ -1,5 +1,5 @@
 import React from "react"
-import { navigate } from '@reach/router';
+import { navigate } from "@reach/router"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
@@ -30,15 +30,15 @@ export default class Contact extends React.Component {
         const options = {
             method: "POST",
             body: JSON.stringify(this.state),
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" },
         }
 
         fetch(apiUrl, options).then(
-            () => { 
-              // navigate to confirmation page
-              navigate('/thankyou/');
+            () => {
+                // navigate to confirmation page
+                navigate("/thankyou/")
             },
-            (error) => {
+            error => {
                 console.error(error)
             }
         )

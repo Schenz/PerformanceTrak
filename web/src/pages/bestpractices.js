@@ -8,8 +8,8 @@ const BestPractices = () => (
         <SEO title="Best Practices" />
         <section className="section overfree">
             <div className="container">
-                <div className="section-title text-center">
-                    <h3>Best Practices</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Best Practices</h3>
                     <hr />
                     <p className="lead">
                         Best Practices is a social learning platform to capture

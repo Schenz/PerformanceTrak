@@ -8,8 +8,8 @@ const Safety = () => (
         <SEO title="Safety" />
         <section className="section overfree">
             <div className="container">
-                <div className="section-title text-center">
-                    <h3>Safety</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Safety</h3>
                     <hr />
                     <p className="lead">
                         Safety programs are designed to reward those who create

@@ -7,8 +7,8 @@ const Rewards = () => (
         <SEO title="Rewards" />
         <section className="section overfree">
             <div className="container">
-                <div className="section-title text-center">
-                    <h3>Rewards</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Rewards</h3>
                     <hr />
                     <p className="lead">
                         Our technology provides the best administrative

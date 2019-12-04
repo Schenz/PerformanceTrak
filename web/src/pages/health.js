@@ -8,8 +8,8 @@ const Health = () => (
         <SEO title="Health" />
         <section className="section overfree">
             <div className="container">
-                <div className="section-title text-center">
-                    <h3>Health</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Health</h3>
                     <hr />
                     <p className="lead">
                         Recognize your employees for their healthy and active

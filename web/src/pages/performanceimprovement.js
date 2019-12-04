@@ -8,8 +8,8 @@ const PerformanceImprovement = () => (
         <SEO title="Performance Improvement" />
         <section className="section overfree">
             <div className="container">
-                <div className="section-title text-center">
-                    <h3>Strategic &amp; Long-Term Incentives</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Strategic &amp; Long-Term Incentives</h3>
                     <hr />
                     <p className="lead">
                         Utilize the platform to create data dashboards and
@@ -24,8 +24,8 @@ const PerformanceImprovement = () => (
                         performance attainment.
                     </p>
                 </div>
-                <div className="section-title text-center">
-                    <h3>Tactical &amp; Short-Term Incentives</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Tactical &amp; Short-Term Incentives</h3>
                     <hr />
                     <p className="lead">
                         While strategic programs serve the long-term

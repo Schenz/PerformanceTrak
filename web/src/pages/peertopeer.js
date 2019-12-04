@@ -8,8 +8,8 @@ const PeerToPeer = () => (
         <SEO title="Peer To Peer" />
         <section className="section overfree">
             <div className="container">
-                <div className="section-title text-center">
-                    <h3>Peer-To-Peer</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Peer-To-Peer</h3>
                     <hr />
                     <p className="lead">
                         Recognition at the peer level is one of the best ways to

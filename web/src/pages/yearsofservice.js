@@ -8,8 +8,8 @@ const YearsOfService = () => (
         <SEO title="Years Of Service" />
         <section className="section overfree">
             <div className="container">
-                <div className="section-title text-center">
-                    <h3>Years Of Service</h3>
+                <div className="section-title">
+                    <h3 className="text-center">Years Of Service</h3>
                     <hr />
                     <p className="lead">
                         Congratulate your employees for their commitment and

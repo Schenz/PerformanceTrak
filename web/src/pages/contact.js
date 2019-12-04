@@ -23,10 +23,34 @@ export default class Contact extends React.Component {
 	
 	handleSubmit = event => {
 		event.preventDefault();
-		console.log(process);
-		console.log(process.env);
-		console.log(process.env.GATSBY_EMAIL_FUNCTION_ENDPOINT);
-		alert(`Welcome ${this.state.name} ${this.state.email}!`)
+		
+		const apiUrl = process.env.GATSBY_EMAIL_FUNCTION_ENDPOINT;
+
+    	var headers = {
+			'Content-Type': 'application/json',
+			'mode': 'no-cors'
+		  };
+
+		const options = {
+      		method: 'POST',
+      		body: JSON.stringify(this.state),
+      		headers
+    	};
+
+		console.log(options);
+
+    	fetch(apiUrl, options)
+      		.then(res => res.json())
+      		.then(result => {
+        		this.setState({
+          			response: result,
+          			isAddProduct: false
+        		})
+      		},
+      		(error) => {
+        		this.setState({ error });
+      		}
+    	)
 	}
 
 	render() {

@@ -1,36 +1,14 @@
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Primitives;
 
 namespace PerformanceTrakEmail.Test
 {
     public class TestFactory
     {
-        public static IEnumerable<object[]> Data()
-        {
-            return new List<object[]>
-            {
-                new object[] { "name", "Bill" },
-                new object[] { "name", "Paul" },
-                new object[] { "name", "Steve" }
-
-            };
-        }
-
-        private static Dictionary<string, StringValues> CreateDictionary(string key, string value)
-        {
-            var qs = new Dictionary<string, StringValues>
-            {
-                { key, value }
-            };
-            return qs;
-        }
-
-        public static Stream GenerateStreamFromString(string s)
+        private static Stream GenerateStreamFromString(string s)
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
@@ -50,18 +28,9 @@ namespace PerformanceTrakEmail.Test
             return request;
         }
 
-        public static ILogger CreateLogger(LoggerTypes type = LoggerTypes.Null)
+        public static ILogger CreateLogger()
         {
-            ILogger logger;
-
-            if (type == LoggerTypes.List)
-            {
-                logger = new ListLogger();
-            }
-            else
-            {
-                logger = NullLoggerFactory.Instance.CreateLogger("Null Logger");
-            }
+            ILogger logger = NullLoggerFactory.Instance.CreateLogger("Null Logger");
 
             return logger;
         }

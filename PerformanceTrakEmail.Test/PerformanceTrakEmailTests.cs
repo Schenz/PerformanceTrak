@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace PerformanceTrakEmail.Test
 {
@@ -62,10 +56,5 @@ namespace PerformanceTrakEmail.Test
         {
             Environment.SetEnvironmentVariable("SendGridApiKey", null);
         }
-
-        //public void SetEnvironmentVariables()
-        //{
-            //Environment.SetEnvironmentVariable("SendGridApiKey", "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");
-        //}
     }
 }

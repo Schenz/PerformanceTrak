@@ -23,6 +23,16 @@ export default class Header extends React.Component {
         listItem.classList.add("active");
       }
     }
+
+    try {
+      var url_string = window.location.href.toLowerCase()
+      var url = new URL(url_string)
+      var code = url.searchParams.get("code")
+
+      console.log("code: " + code)
+  } catch (err) {
+      console.log("Issues with Parsing URL Parameter's - " + err)
+  }
   }
 
   render() {
@@ -67,7 +77,7 @@ export default class Header extends React.Component {
                     </ul>
                   </li>
                   <li id="navContact"><Link to="/contact/">Contact us</Link></li>
-                  <li id="navSignin"><Link to="/signin/">Sign In</Link></li>
+                  <li id="navSignin"><a href="https://scdperformancetrak.b2clogin.com/scdperformancetrak.onmicrosoft.com/B2C_1_SingUpSignIn2/oauth2/v2.0/authorize?client_id=27d341d7-c9cf-409d-a134-cf8fe167463e&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fredirect%2F&response_mode=query&scope=openid+offline_access+https%3A%2F%2Fscdperformancetrak.onmicrosoft.com%2FPerformanceTrak%2Fpt">Sign In</a></li>
                 </ul>
               </div>
             </div>

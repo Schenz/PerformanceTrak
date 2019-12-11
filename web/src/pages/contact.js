@@ -33,13 +33,22 @@ export default class Contact extends React.Component {
             headers: { "Content-Type": "application/json" },
         }
 
+        console.log("call API");
+
         fetch(apiUrl, options).then(
-            () => {
-                // navigate to confirmation page
-                navigate("/thankyou/")
+            (response) => {
+                if(response.ok) {
+                    // navigate to confirmation page
+                    navigate("/thankyou/")
+                } else {
+                    // navigate to error page
+                    navigate("/emailerror/")
+                }
             },
             error => {
                 console.error(error)
+                // navigate to error page
+                navigate("/emailerror/")
             }
         )
     }

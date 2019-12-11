@@ -25,11 +25,17 @@ export default class Header extends React.Component {
     }
 
     try {
-      var url_string = window.location.href.toLowerCase()
-      var url = new URL(url_string)
-      var code = url.searchParams.get("code")
+      var url_string = window.location.href.toLowerCase();
+      var url = new URL(url_string);
+      var code = url.searchParams.get("code");
 
-      console.log("code: " + code)
+      console.log("code: " + code);
+
+      if(code) {
+        console.log("got a code, get token");
+      } else {
+        console.log("do nothing");
+      }
   } catch (err) {
       console.log("Issues with Parsing URL Parameter's - " + err)
   }

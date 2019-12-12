@@ -1,6 +1,7 @@
 import { Link } from "gatsby"
 import React from "react"
 import Logo from "./images/logo.png"
+import { ApplicationInsights } from '@microsoft/applicationinsights-web'
 
 export default class Header extends React.Component {
   componentDidMount() {
@@ -36,9 +37,16 @@ export default class Header extends React.Component {
       } else {
         console.log("do nothing");
       }
-  } catch (err) {
+    } catch (err) {
       console.log("Issues with Parsing URL Parameter's - " + err)
-  }
+    }
+
+    const appInsights = new ApplicationInsights({ config: {
+        instrumentationKey: process.env.GATSBY_INSTRUMENTATION_KEY
+      } 
+    });
+    appInsights.loadAppInsights();
+    appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
   }
 
   render() {

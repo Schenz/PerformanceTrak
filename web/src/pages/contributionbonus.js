@@ -28,21 +28,21 @@ const ContributionBonus = () => (
                         There is only one rule on how you may distribute the
                         bonus: you must give it away. Some distribution options
                         are:
-                        <ul>
-                            <li>Award all of the money to 1 person</li>
-                            <li>Award the money equally to other employees</li>
-                            <li>
-                                Award the bulk of the bonus to one and a smaller
-                                portion to another
-                            </li>
-                            <li>
-                                All we ask is for you to consider the
-                                individual’s contribution to the organization
-                                and thank them for his or her contributions to
-                                making a significant positive impact!
-                            </li>
-                        </ul>
                     </p>
+                    <ul className="lead">
+                        <li>Award all of the money to 1 person</li>
+                        <li>Award the money equally to other employees</li>
+                        <li>
+                            Award the bulk of the bonus to one and a smaller
+                            portion to another
+                        </li>
+                        <li>
+                            All we ask is for you to consider the
+                            individual’s contribution to the organization
+                            and thank them for his or her contributions to
+                            making a significant positive impact!
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>

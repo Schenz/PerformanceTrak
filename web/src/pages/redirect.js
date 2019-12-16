@@ -1,14 +1,24 @@
 import React from "react"
 import { Link } from "gatsby"
-
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
-const Redirect = () => (
-  <Layout>
-    <SEO title="Redirect" />
-    <Link to="/">Go back to the homepage</Link>
-  </Layout>
-)
+export default class Redirect extends React.Component {
+    state = {
+        previous_url: "",
+    }
 
-export default Redirect
+    componentDidMount() {
+        this.setState({ previous_url: window.location.pathname })
+    }
+    render() {
+        return (
+            <Layout>
+                <SEO title="Redirect" />
+                <Link to="/" state={this.state}>
+                    Go back to the homepage
+                </Link>
+            </Layout>
+        )
+    }
+}

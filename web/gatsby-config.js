@@ -1,13 +1,7 @@
-let activeEnv =
-  process.env.GATSBY_ACTIVE_ENV || process.env.NODE_ENV || "development"
-console.log(`Using environment config: '${activeEnv}'`)
+let activeEnv = process.env.GATSBY_ACTIVE_ENV || process.env.NODE_ENV || "development"
 require("dotenv").config({
   path: `.env.${activeEnv}`,
 })
-
-console.log(process.env.GATSBY_EMAIL_FUNCTION_ENDPOINT)
-
-const path = require(`path`)
 
 module.exports = {
   siteMetadata: {

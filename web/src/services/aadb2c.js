@@ -15,6 +15,8 @@ if (isBrowser) {
     port = window.location.port;
   }
   redirect_uri = window.location.protocol + '//' + window.location.hostname + '/' + port + '/redirect/';
+
+  console.log('redirect_uri in aadb2c.js: ', redirect_uri);
 }
 
 helloJsSignInSignUpPolicy = 'adB2CSignInSignUp';

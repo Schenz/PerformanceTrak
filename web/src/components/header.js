@@ -1,30 +1,30 @@
-import { Link } from "gatsby"
-import React from "react"
-import Logo from "./images/logo.png"
-import { ApplicationInsights } from "@microsoft/applicationinsights-web"
+import { Link } from 'gatsby';
+import React from 'react';
+import Logo from './images/logo.png';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import { login, loginDisplayType, logout } from '../services/auth';
 
 export default class Header extends React.Component {
   state = {
-    previous_url: ""
-  }
+    previous_url: '',
+  };
 
   setActiveMenuItem(pathName) {
     let listItem;
-    this.setState({ previous_url: pathName })
-    
-    if (pathName === "/") {
-      listItem = document.querySelector("#navHome")
-      listItem.classList.add("active")
-    } else if (pathName === "/signin/") {
-      listItem = document.querySelector("#navSignin")
-      listItem.classList.add("active")
-    } else if (pathName === "/contact/" || pathName === "/thankyou/") {
-      listItem = document.querySelector("#navContact")
-      listItem.classList.add("active")
+
+    if (pathName === '/') {
+      listItem = document.querySelector('#navHome');
+      listItem.classList.add('active');
+    } else if (pathName === '/signin/') {
+      listItem = document.querySelector('#navSignin');
+      listItem.classList.add('active');
+    } else if (pathName === '/contact/' || pathName === '/thankyou/') {
+      listItem = document.querySelector('#navContact');
+      listItem.classList.add('active');
     } else {
-      if (pathName !== "/404/") {
-        listItem = document.querySelector("#navProducts")
-        listItem.classList.add("active")
+      if (pathName !== '/404/') {
+        listItem = document.querySelector('#navProducts');
+        listItem.classList.add('active');
       }
     }
   }
@@ -32,13 +32,11 @@ export default class Header extends React.Component {
   trackPageView(pathName) {
     let previous_url;
 
-    if(window.history.state == null) {
-      previous_url = "";
+    if (window.history.state == null) {
+      previous_url = '';
     } else {
       previous_url = window.history.state.previous_url;
     }
-
-    console.log("previous_url: " + previous_url);
 
     const appInsights = new ApplicationInsights({
       config: {
@@ -46,38 +44,18 @@ export default class Header extends React.Component {
       },
     });
 
-    appInsights.loadAppInsights()
+    appInsights.loadAppInsights();
     appInsights.trackPageView({
       uri: window.location.href,
       name: pathName,
       refUri: previous_url,
-    })
-  }
-
-  performLogin() {
-    try {
-      var url_string = window.location.href.toLowerCase()
-      var url = new URL(url_string)
-      var code = url.searchParams.get("code")
-
-      console.log("code: " + code)
-
-      if (code) {
-        console.log("got a code, get token")
-      } else {
-        console.log("do nothing")
-      }
-    } catch (err) {
-      console.log("Issues with Parsing URL Parameter's - " + err)
-    }
+    });
   }
 
   componentDidMount() {
-    let pathName = window.location.pathname
-
-    this.setActiveMenuItem(pathName)
-    this.trackPageView(pathName)
-    this.performLogin();
+    this.setState({ previous_url: window.location.pathname });
+    this.setActiveMenuItem(window.location.pathname);
+    this.trackPageView(window.location.pathname);
   }
 
   render() {
@@ -94,10 +72,8 @@ export default class Header extends React.Component {
                   data-target="#navbar"
                   aria-expanded="false"
                   aria-controls="navbar"
-                  >
-                  <span className="sr-only">
-                    Toggle navigation
-                  </span>
+                >
+                  <span className="sr-only">Toggle navigation</span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
@@ -106,18 +82,14 @@ export default class Header extends React.Component {
                   <img src={Logo} alt="PerformanceTrak" />
                 </Link>
               </div>
-              <div
-                id="navbar"
-                className="navbar-collapse collapse"
-                >
+              <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav navbar-right">
                   <li id="navHome">
-                    <Link to="/" state={this.state}>Home</Link>
+                    <Link to="/" state={this.state}>
+                      Home
+                    </Link>
                   </li>
-                  <li
-                    id="navProducts"
-                    className="dropdown yamm-fw hasmenu"
-                    >
+                  <li id="navProducts" className="dropdown yamm-fw hasmenu">
                     <Link
                       to="#top"
                       className="dropdown-toggle"
@@ -125,9 +97,9 @@ export default class Header extends React.Component {
                       role="button"
                       aria-haspopup="true"
                       aria-expanded="false"
-                      state={this.state}>
-                      Products{" "}
-                      <span className="fa fa-angle-down"></span>
+                      state={this.state}
+                    >
+                      Products <span className="fa fa-angle-down"></span>
                     </Link>
                     <ul className="dropdown-menu">
                       <li>
@@ -183,12 +155,28 @@ export default class Header extends React.Component {
                     </ul>
                   </li>
                   <li id="navContact">
-                    <Link to="/contact/" state={this.state}>Contact us</Link>
+                    <Link to="/contact/" state={this.state}>
+                      Contact us
+                    </Link>
                   </li>
                   <li id="navSignin">
-                    <a href="https://scdperformancetrak.b2clogin.com/scdperformancetrak.onmicrosoft.com/B2C_1_SingUpSignIn2/oauth2/v2.0/authorize?client_id=27d341d7-c9cf-409d-a134-cf8fe167463e&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fredirect%2F&response_mode=query&scope=openid+offline_access+https%3A%2F%2Fscdperformancetrak.onmicrosoft.com%2FPerformanceTrak%2Fpt">
+                    <button
+                      onClick={e => {
+                        
+                        login(loginDisplayType.PopUp);
+                        e.preventDefault();
+                      }}
+                    >
                       Sign In
-                    </a>
+                    </button>
+                    <button
+                      onClick={e => {
+                        logout();
+                        e.preventDefault();
+                      }}
+                    >
+                      Sign Out
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -196,6 +184,6 @@ export default class Header extends React.Component {
           </nav>
         </div>
       </header>
-    )
+    );
   }
 }

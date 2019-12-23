@@ -9,7 +9,13 @@ tenantDomain = `${tenant}.onmicrosoft.com`;
 policy = 'B2C_1_SingUpSignIn2';
 
 if (isBrowser) {
-  if (window.location.port === '80') {
+  if (
+    window.location.port === '80' ||
+    window.location.port === '' ||
+    window.location.port === '0' ||
+    window.location.port === 80 ||
+    window.location.port === 0
+  ) {
     port = '/';
   } else {
     port = ':' + window.location.port + '/';

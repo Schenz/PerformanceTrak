@@ -89,7 +89,13 @@ applicationId = '27d341d7-c9cf-409d-a134-cf8fe167463e';
 scope = 'https://scdperformancetrak.onmicrosoft.com/PerformanceTrak/pt';
 responseType = 'token id_token';
 if (isBrowser) {
-  if (window.location.port === '80') {
+  if (
+    window.location.port === '80' ||
+    window.location.port === '' ||
+    window.location.port === '0' ||
+    window.location.port === 80 ||
+    window.location.port === 0
+  ) {
     port = '/';
   } else {
     port = ':' + window.location.port + '/';

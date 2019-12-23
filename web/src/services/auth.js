@@ -90,13 +90,13 @@ scope = 'https://scdperformancetrak.onmicrosoft.com/PerformanceTrak/pt';
 responseType = 'token id_token';
 if (isBrowser) {
   if (window.location.port === '80') {
-    port = '';
+    port = '/';
   } else {
-    port = window.location.port;
+    port = ':' + window.location.port + '/';
   }
-  redirect_uri = window.location.protocol + '//' + window.location.hostname + '/' + port + '/redirect/';
+  redirect_uri = window.location.protocol + '//' + window.location.hostname + port + 'redirect/';
 
-  console.log('redirect_uri in auth.js: ', redirect_uri);
+  console.log('redirect_uri in aadb2c.js: ', redirect_uri);
 }
 user = {};
 

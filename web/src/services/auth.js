@@ -1,6 +1,8 @@
 import * as hello from 'hellojs';
 import './aadb2c.js';
 
+export const isBrowser = typeof window !== 'undefined';
+
 export var loginDisplayType = {
   PopUp: 'popup',
   None: 'none',
@@ -21,24 +23,24 @@ export const login = displayType => {
 
   //in case of silent renew, check if the session is still active otherwise ask the user to login again
   if (!online() && displayType === loginDisplayType.None) {
-    console.log("silent refresh");
+    console.log('silent refresh');
 
     hello('adB2CSignInSignUp')
-    .login({ display: displayType, force: false })
-    .then(
-      function() {
-        console.log('Silent Nothing Function...');
-      },
-      function(e) {
-        console.log(e);
-        if ('Iframe was blocked' in e.error.message) {
-          login(loginDisplayType.Page);
-          return;
-        }
+      .login({ display: displayType, force: false })
+      .then(
+        function() {
+          console.log('Silent Nothing Function...');
+        },
+        function(e) {
+          console.log(e);
+          if ('Iframe was blocked' in e.error.message) {
+            login(loginDisplayType.Page);
+            return;
+          }
 
-        alert('Signin error: ' + e.error.message);
-      }
-    );
+          alert('Signin error: ' + e.error.message);
+        }
+      );
 
     return;
   }
@@ -94,37 +96,39 @@ const tokens = {
   accessToken: false,
 };
 
-hello.init(
-  {
-    adB2CSignInSignUp: applicationId,
-  },
-  {
-    redirect_uri: redirect_uri,
-    scope: 'openid ' + scope,
-    response_type: responseType,
-  }
-);
+if (isBrowser) {
+  hello.init(
+    {
+      adB2CSignInSignUp: applicationId,
+    },
+    {
+      redirect_uri: redirect_uri,
+      scope: 'openid ' + scope,
+      response_type: responseType,
+    }
+  );
 
-hello.on('auth.login', function(auth) {
-  console.log('Enter auth.login at: ' + new Date());
+  hello.on('auth.login', function(auth) {
+    console.log('Enter auth.login at: ' + new Date());
 
-  tokens.idToken = auth.authResponse.id_token;
-  tokens.accessToken = auth.authResponse.access_token;
-  window.localStorage.setItem('isLoggedIn', false);
+    tokens.idToken = auth.authResponse.id_token;
+    tokens.accessToken = auth.authResponse.access_token;
+    window.localStorage.setItem('isLoggedIn', false);
 
-  var jwt = parseJwt(tokens.idToken);
-  console.log(jwt);
-  setUser(jwt);
-  console.log(user);
-});
+    var jwt = parseJwt(tokens.idToken);
+    console.log(jwt);
+    setUser(jwt);
+    console.log(user);
+  });
 
-hello.on('auth.logout', function() {
-  console.log('Enter auth.logout at: ' + new Date());
-  tokens.accessToken = false;
-  tokens.idToken = false;
-  user = {};
-  window.localStorage.setItem('isLoggedIn', false);
-});
+  hello.on('auth.logout', function() {
+    console.log('Enter auth.logout at: ' + new Date());
+    tokens.accessToken = false;
+    tokens.idToken = false;
+    user = {};
+    window.localStorage.setItem('isLoggedIn', false);
+  });
+}
 
 function parseJwt(token) {
   return JSON.parse(
@@ -168,20 +172,3 @@ function online() {
 
   return session && session.access_token && session.expires > currentTime;
 }
-
-/*setInterval(function() {
-  let session, currentTime;
-
-  session = hello('adB2CSignInSignUp').getAuthResponse();
-  currentTime = new Date().getTime() / 1000; //seconds since 1 January 1970 00:00:00.
-
-  console.log('time left(seconds): ', session.expires - currentTime)
-
-  if(session.expires <= currentTime) {
-    console.log("time to refresh")
-    login(loginDisplayType.None)
-  } else {
-    console.log("not time to refresh")
-    // do nothing
-  }
-}, 5000)*/

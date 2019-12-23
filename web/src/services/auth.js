@@ -83,12 +83,19 @@ export const getProfile = () => {
   return user;
 };
 
-let applicationId, scope, responseType, redirect_uri, user;
+let applicationId, scope, responseType, redirect_uri, user, port;
 
 applicationId = '27d341d7-c9cf-409d-a134-cf8fe167463e';
 scope = 'https://scdperformancetrak.onmicrosoft.com/PerformanceTrak/pt';
 responseType = 'token id_token';
-redirect_uri = 'http://localhost:8000/redirect/';
+if (isBrowser) {
+  if (window.location.port === '80') {
+    port = '';
+  } else {
+    port = window.location.port;
+  }
+  redirect_uri = window.location.protocol + '//' + window.location.hostname + '/' + port + '/redirect/';
+}
 user = {};
 
 const tokens = {

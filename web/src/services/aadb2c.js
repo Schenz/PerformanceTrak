@@ -1,13 +1,22 @@
 import * as hello from 'hellojs';
 
-let tenant, tenantDomain, policy, redirect_uri, helloJsSignInSignUpPolicy;
+let tenant, tenantDomain, policy, redirect_uri, port, helloJsSignInSignUpPolicy;
 
 export const isBrowser = typeof window !== 'undefined';
 
 tenant = 'scdperformancetrak';
 tenantDomain = `${tenant}.onmicrosoft.com`;
 policy = 'B2C_1_SingUpSignIn2';
-redirect_uri = 'http://localhost:8000/redirect/';
+
+if (isBrowser) {
+  if (window.location.port === '80') {
+    port = '';
+  } else {
+    port = window.location.port;
+  }
+  redirect_uri = window.location.protocol + '//' + window.location.hostname + '/' + port + '/redirect/';
+}
+
 helloJsSignInSignUpPolicy = 'adB2CSignInSignUp';
 
 if (isBrowser) {

@@ -1,5 +1,7 @@
-import * as hello from 'hellojs';
+import hello from 'hellojs';
+import getRedirectUrl from './getRedirectUrl';
 import './aadb2c.js';
+import { navigate } from '@reach/router';
 
 export const isBrowser = typeof window !== 'undefined';
 
@@ -10,72 +12,55 @@ export var loginDisplayType = {
 };
 
 export const isAuthenticated = () => {
-  return tokens.idToken !== false;
+  if (online()) {
+    return tokens.idToken !== false;
+  } else {
+    return false;
+  }
 };
 
 export const login = displayType => {
-  console.log('Enter login at: ' + new Date());
-  console.log('displayType: ' + displayType);
+  stopTimer();
 
   if (!displayType) {
     displayType = loginDisplayType.Page;
   }
 
-  //in case of silent renew, check if the session is still active otherwise ask the user to login again
-  if (!online() && displayType === loginDisplayType.None) {
-    console.log('silent refresh');
-
-    hello('adB2CSignInSignUp')
-      .login({ display: displayType, force: false })
-      .then(
-        function() {
-          console.log('Silent Nothing Function...');
-        },
-        function(e) {
-          console.log(e);
-          if ('Iframe was blocked' in e.error.message) {
-            login(loginDisplayType.Page);
-            return;
-          }
-
-          alert('Signin error: ' + e.error.message);
-        }
-      );
-
-    return;
-  }
-
   hello('adB2CSignInSignUp')
     .login({ display: displayType, force: false })
     .then(
-      function() {
-        console.log('Do Nothing Function...');
-      },
+      function() {},
       function(e) {
-        console.log(e);
         if ('Iframe was blocked' in e.error.message) {
           login(loginDisplayType.Page);
           return;
         }
 
-        alert('Signin error: ' + e.error.message);
+        console.log(e);
       }
     );
 };
 
 export const logout = () => {
-  console.log('Enter logout at: ' + new Date());
+  stopTimer();
   if (online()) {
     hello('adB2CSignInSignUp')
       .logout({ force: true })
       .then(
         function() {
-          alert('policy: B2C_1_SingUpSignIn2 You are logging out from AD B2C');
+          alert(`policy: ${policy} You are logging out from AD B2C`);
         },
         function(e) {
           alert('Logout error: ' + e.error.message);
         }
       );
+  } else {
+    tokens.accessToken = false;
+    tokens.idToken = false;
+    user = {};
+    window.localStorage.setItem('isLoggedIn', false);
+    stopTimer();
+    navigate('.');
   }
 };
 
@@ -83,27 +68,13 @@ export const getProfile = () => {
   return user;
 };
 
-let applicationId, scope, responseType, redirect_uri, user, port;
+let applicationId, scope, responseType, user, t, timer_is_on;
 
 applicationId = '27d341d7-c9cf-409d-a134-cf8fe167463e';
-scope = 'https://scdperformancetrak.onmicrosoft.com/PerformanceTrak/pt';
+scope = 'profile https://scdperformancetrak.onmicrosoft.com/PerformanceTrak/pt';
 responseType = 'token id_token';
-if (isBrowser) {
-  if (
-    window.location.port === '80' ||
-    window.location.port === '' ||
-    window.location.port === '0' ||
-    window.location.port === 80 ||
-    window.location.port === 0
-  ) {
-    port = '/';
-  } else {
-    port = ':' + window.location.port + '/';
-  }
-  redirect_uri = window.location.protocol + '//' + window.location.hostname + port + 'redirect/';
+timer_is_on = false;
 
-  console.log('redirect_uri in aadb2c.js: ', redirect_uri);
-}
 user = {};
 
 const tokens = {
@@ -111,37 +82,36 @@ const tokens = {
   accessToken: false,
 };
 
+const policy = process.env.GATSBY_AAD_POLICY;
+
 if (isBrowser) {
   hello.init(
     {
       adB2CSignInSignUp: applicationId,
     },
     {
-      redirect_uri: redirect_uri,
+      redirect_uri: getRedirectUrl(),
       scope: 'openid ' + scope,
       response_type: responseType,
+      response_mode: 'fragment',
     }
   );
 
   hello.on('auth.login', function(auth) {
-    console.log('Enter auth.login at: ' + new Date());
-
     tokens.idToken = auth.authResponse.id_token;
     tokens.accessToken = auth.authResponse.access_token;
-    window.localStorage.setItem('isLoggedIn', false);
+    window.localStorage.setItem('isLoggedIn', true);
 
-    var jwt = parseJwt(tokens.idToken);
-    console.log(jwt);
-    setUser(jwt);
-    console.log(user);
+    setUser(parseJwt(tokens.idToken));
+    startTimer();
   });
 
-  hello.on('auth.logout', function() {
-    console.log('Enter auth.logout at: ' + new Date());
+  hello.on('auth.logout', function(param) {
     tokens.accessToken = false;
     tokens.idToken = false;
     user = {};
     window.localStorage.setItem('isLoggedIn', false);
+    stopTimer();
   });
 }
 
@@ -165,6 +135,7 @@ function parseJwt(token) {
 
 function setUser(jwt) {
   user = {
+    id: jwt.sub,
     name: jwt.name,
     family_name: jwt.family_name,
     given_name: jwt.given_name,
@@ -178,8 +149,6 @@ function setUser(jwt) {
 }
 
 function online() {
-  console.log('enter online at: ' + new Date());
-
   let session, currentTime;
 
   session = hello('adB2CSignInSignUp').getAuthResponse();
@@ -187,3 +156,25 @@ function online() {
 
   return session && session.access_token && session.expires > currentTime;
 }
+
+function timedCount() {
+  if (!online()) {
+    logout();
+    stopTimer();
+    return;
+  }
+
+  t = setTimeout(timedCount, 10000);
+}
+
+function startTimer() {
+  if (!timer_is_on) {
+    timedCount();
+  }
+}
+
+function stopTimer() {
+  clearTimeout(t);
+}
+
+startTimer();

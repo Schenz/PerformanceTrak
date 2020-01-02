@@ -2,7 +2,7 @@ import { Link } from 'gatsby';
 import React from 'react';
 import Logo from './images/logo.png';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import { login, loginDisplayType, logout } from '../services/auth';
+import { login, loginDisplayType, logout, isAuthenticated, getProfile } from '../services/auth';
 
 export default class Header extends React.Component {
   state = {
@@ -45,6 +45,13 @@ export default class Header extends React.Component {
     });
 
     appInsights.loadAppInsights();
+
+    if (isAuthenticated()) {
+      var user = getProfile();
+      appInsights.setAuthenticatedUserContext(user.id);
+    } else {
+      appInsights.clearAuthenticatedUserContext();
+    }
     appInsights.trackPageView({
       uri: window.location.href,
       name: pathName,
@@ -160,23 +167,27 @@ export default class Header extends React.Component {
                     </Link>
                   </li>
                   <li id="navSignin">
-                    <button
-                      onClick={e => {
-                        
-                        login(loginDisplayType.PopUp);
-                        e.preventDefault();
-                      }}
-                    >
-                      Sign In
-                    </button>
-                    <button
-                      onClick={e => {
-                        logout();
-                        e.preventDefault();
-                      }}
-                    >
-                      Sign Out
-                    </button>
+                    {isAuthenticated() ? (
+                      <Link
+                        to="."
+                        onClick={e => {
+                          logout();
+                          e.preventDefault();
+                        }}
+                      >
+                        Sign Out
+                      </Link>
+                    ) : (
+                      <Link
+                        to="."
+                        onClick={e => {
+                          login(loginDisplayType.PopUp);
+                          e.preventDefault();
+                        }}
+                      >
+                        Sign In
+                      </Link>
+                    )}
                   </li>
                 </ul>
               </div>

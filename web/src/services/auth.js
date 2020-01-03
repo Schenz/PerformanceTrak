@@ -43,24 +43,26 @@ export const login = displayType => {
 
 export const logout = () => {
   stopTimer();
-  if (online()) {
-    hello('adB2CSignInSignUp')
-      .logout({ force: true })
-      .then(
-        function() {
-          alert(`policy: ${policy} You are logging out from AD B2C`);
-        },
-        function(e) {
-          alert('Logout error: ' + e.error.message);
-        }
-      );
-  } else {
-    tokens.accessToken = false;
-    tokens.idToken = false;
-    user = {};
-    window.localStorage.setItem('isLoggedIn', false);
-    stopTimer();
-    navigate('.');
+  if (isBrowser) {
+    if (online()) {
+      hello('adB2CSignInSignUp')
+        .logout({ force: true })
+        .then(
+          function() {
+            alert(`policy: ${policy} You are logging out from AD B2C`);
+          },
+          function(e) {
+            alert('Logout error: ' + e.error.message);
+          }
+        );
+    } else {
+      tokens.accessToken = false;
+      tokens.idToken = false;
+      user = {};
+      window.localStorage.setItem('isLoggedIn', false);
+      stopTimer();
+      navigate('.');
+    }
   }
 };
 
@@ -151,10 +153,12 @@ function setUser(jwt) {
 function online() {
   let session, currentTime;
 
-  session = hello('adB2CSignInSignUp').getAuthResponse();
-  currentTime = new Date().getTime() / 1000; //seconds since 1 January 1970 00:00:00.
+  if (isBrowser) {
+    session = hello('adB2CSignInSignUp').getAuthResponse();
+    currentTime = new Date().getTime() / 1000; //seconds since 1 January 1970 00:00:00.
 
-  return session && session.access_token && session.expires > currentTime;
+    return session && session.access_token && session.expires > currentTime;
+  }
 }
 
 function timedCount() {

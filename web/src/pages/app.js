@@ -1,25 +1,29 @@
-import React from "react"
-import { Link } from "gatsby"
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import React from 'react';
+import { Router } from '@reach/router';
+import AppLayout from '../components/app_layout';
+import PrivateRoute from '../components/privateRoute';
+import Profile from '../components/profile';
+import Login from '../components/login';
+import { isAuthenticated } from '../services/auth';
+import { navigate } from 'gatsby';
 
-export default class App extends React.Component {
-    state = {
-        previous_url: "",
-    }
+const App = () => {
+  if (!isAuthenticated()) {
+    navigate('/');
+  } else {
+    navigate('/app/profile/');
+  }
 
-    componentDidMount() {
-        this.setState({ previous_url: window.location.pathname })
-    }
+  return (
+    <>
+      <AppLayout>
+        <Router>
+          <PrivateRoute path="/app/profile" component={Profile} />
+          <Login path="/app/login" />
+        </Router>
+      </AppLayout>
+    </>
+  );
+};
 
-    render() {
-        return (
-            <Layout>
-                <SEO title="App" />
-                <Link to="/" state={this.state}>
-                    This should be a protected page....
-                </Link>
-            </Layout>
-        )
-    }
-}
+export default App;

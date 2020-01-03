@@ -44,15 +44,18 @@ export const login = displayType => {
 export const logout = () => {
   stopTimer();
   if (isBrowser) {
+    console.log('isBrowser');
     if (online()) {
+      console.log('online');
+      navigate('/');
       hello('adB2CSignInSignUp')
-        .logout({ force: true })
+        .logout()
         .then(
           function() {
-            alert(`policy: ${policy} You are logging out from AD B2C`);
+            console.log('Signed out');
           },
           function(e) {
-            alert('Logout error: ' + e.error.message);
+            console.log('Signed out error: ' + e.error.message);
           }
         );
     } else {
@@ -60,6 +63,8 @@ export const logout = () => {
       tokens.idToken = false;
       user = {};
       window.localStorage.setItem('isLoggedIn', false);
+      window.localStorage.removeItem('jwt');
+      window.localStorage.removeItem('user');
       stopTimer();
       navigate('.');
     }
@@ -84,8 +89,6 @@ const tokens = {
   accessToken: false,
 };
 
-const policy = process.env.GATSBY_AAD_POLICY;
-
 if (isBrowser) {
   hello.init(
     {
@@ -105,7 +108,38 @@ if (isBrowser) {
     window.localStorage.setItem('isLoggedIn', true);
 
     setUser(parseJwt(tokens.idToken));
+
+    if (user.isNew) {
+      const apiUrl = process.env.GATSBY_ADD_USER_FUNCTION_ENDPOINT;
+
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: { 'Content-Type': 'application/json' },
+      };
+
+      console.log('call API');
+
+      fetch(apiUrl, options).then(
+        response => {
+          if (response.ok) {
+            // navigate to confirmation page
+            console.log(response);
+          } else {
+            // navigate to error page
+            console.log(response);
+          }
+        },
+        error => {
+          console.error(error);
+          // navigate to error page
+          //navigate('/emailerror/');
+        }
+      );
+    }
+
     startTimer();
+    navigate('/app/profile/');
   });
 
   hello.on('auth.logout', function(param) {
@@ -113,6 +147,8 @@ if (isBrowser) {
     tokens.idToken = false;
     user = {};
     window.localStorage.setItem('isLoggedIn', false);
+    window.localStorage.removeItem('jwt');
+    window.localStorage.removeItem('user');
     stopTimer();
   });
 }
@@ -136,18 +172,23 @@ function parseJwt(token) {
 }
 
 function setUser(jwt) {
+  console.log(jwt);
+  window.localStorage.setItem('jwt', JSON.stringify(jwt));
+
   user = {
     id: jwt.sub,
     name: jwt.name,
     family_name: jwt.family_name,
     given_name: jwt.given_name,
-    city: jwt.city,
-    country: jwt.country,
-    postalCode: jwt.postalCode,
-    state: jwt.state,
-    streetAddress: jwt.streetAddress,
+    city: jwt.city || '',
+    country: jwt.country || '',
+    postalCode: jwt.postalCode || '',
+    state: jwt.state || '',
+    streetAddress: jwt.streetAddress || '',
     emails: jwt.emails,
+    isNew: jwt.newUser || false,
   };
+  window.localStorage.setItem('user', JSON.stringify(user));
 }
 
 function online() {

@@ -7,11 +7,15 @@ import Login from '../components/login';
 import { isAuthenticated } from '../services/auth';
 import { navigate } from 'gatsby';
 
+export const isBrowser = typeof window !== 'undefined';
+
 const App = () => {
-  if (!isAuthenticated()) {
-    navigate('/');
-  } else {
-    navigate('/app/profile/');
+  if (isBrowser) {
+    if (!isAuthenticated()) {
+      navigate('/');
+    } else {
+      navigate('/app/profile/');
+    }
   }
 
   return (

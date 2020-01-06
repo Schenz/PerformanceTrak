@@ -43,7 +43,7 @@ namespace AddUser.Test
         private async Task DeleteTestRecordAsync(EmployeeSessionEntity entity)
         {
             var table = CloudStorageAccount
-                    .Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage"))
+                    .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString"))
                     .CreateCloudTableClient()
                     .GetTableReference("employee");
 
@@ -68,7 +68,7 @@ namespace AddUser.Test
 
         private void ClearEnvironmentVariable()
         {
-            Environment.SetEnvironmentVariable("AzureWebJobsStorage", null);
+            Environment.SetEnvironmentVariable("TableStoreConnectionString", null);
         }
     }
 }

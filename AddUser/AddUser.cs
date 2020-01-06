@@ -27,7 +27,7 @@ namespace AddUser
                 }
 
                 var table = CloudStorageAccount
-                    .Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage"))
+                    .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString"))
                     .CreateCloudTableClient()
                     .GetTableReference("employee");
 

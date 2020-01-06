@@ -19,27 +19,19 @@ namespace PerformanceTrakEmail
         [FunctionName("PerformanceTrackEmail")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ContactEmail")] HttpRequest req, ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<EmailObject>(requestBody);
-                
-                var apiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
-                var client = new SendGridClient(apiKey);
-                var from = new EmailAddress(data.Email, data.FullName);
-                var subject = data.Subject;
-                var to = new EmailAddress("bschenz@gmail.com", "Brandon Schenz");
-                var plainTextContent = BuildPlainTextContent(data);
-                var htmlContent = BuildHtmlContent(data);
-                var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-                var response = await client.SendEmailAsync(msg);
+                var msg = MailHelper.CreateSingleEmail(new EmailAddress(data.Email, data.FullName), new EmailAddress("bschenz@gmail.com", "Brandon Schenz"), data.Subject, BuildPlainTextContent(data), BuildHtmlContent(data));
+                var response = await new SendGridClient(Environment.GetEnvironmentVariable("SendGridApiKey")).SendEmailAsync(msg);
 
                 if (response.StatusCode == HttpStatusCode.Accepted)
                 {
                     return (ActionResult)new NoContentResult();
-                } else {
+                }
+                else
+                {
                     log.LogWarning("SendGrid Failed: StatusCode: {0} Body: {1} Headers: {2}", response.StatusCode, response.Body, response.Headers);
                     return new BadRequestObjectResult(response.Body);
                 }

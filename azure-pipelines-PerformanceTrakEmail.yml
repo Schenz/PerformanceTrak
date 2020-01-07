@@ -14,7 +14,7 @@ variables:
   functionAppName: 'PerformanceTrakEmail'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-16.04'
+  vmImageName: 'vs2017-win2016'
 
   # Working Directory
   workingDirectory: '$(System.DefaultWorkingDirectory)/'

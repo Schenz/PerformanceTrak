@@ -185,7 +185,7 @@ function setUser(jwt) {
     postalCode: jwt.postalCode || '',
     state: jwt.state || '',
     streetAddress: jwt.streetAddress || '',
-    emails: jwt.emails,
+    email: jwt.emails[0] || '',
     isNew: jwt.newUser || false,
   };
   window.localStorage.setItem('user', JSON.stringify(user));

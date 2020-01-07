@@ -19,22 +19,26 @@ namespace AddUser
         {
             try
             {
-                var entity = JsonConvert.DeserializeObject<EmployeeSessionEntity>(await new StreamReader(req.Body).ReadToEndAsync());
+                var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
 
                 if (entity == null)
                 {
                     return new BadRequestObjectResult("User not passed");
                 }
 
+                var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("Environment"));
+                var environmentString = $"{environment.ToString()}";
+                var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
+
                 var table = CloudStorageAccount
                     .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString"))
                     .CreateCloudTableClient()
-                    .GetTableReference("employee");
+                    .GetTableReference(tableName);
 
                 await table.CreateIfNotExistsAsync();
 
-                entity.PartitionKey = entity.Id.ToString();
-                entity.RowKey = entity.Name;
+                entity.PartitionKey = entity.FamilyName.Substring(0, 1);
+                entity.RowKey = entity.Id.ToString();
 
                 var result = await table.ExecuteAsync(TableOperation.Insert(entity));
 
@@ -42,7 +46,7 @@ namespace AddUser
             }
             catch (System.Exception ex)
             {
-                log.LogError(ex, "Error While Adding User");
+                log.LogCritical(ex, "Error Adding User");
                 return new BadRequestObjectResult("Error While Adding User");
             }
         }

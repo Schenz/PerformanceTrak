@@ -38,7 +38,7 @@ namespace PerformanceTrakEmail
             }
             catch (System.Exception ex)
             {
-                log.LogError(ex, "Error While Sending Email");
+                log.LogCritical(ex, "Error While Sending Email");
                 return new BadRequestObjectResult("Error While Sending Email");
             }
         }

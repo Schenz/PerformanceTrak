@@ -31,21 +31,25 @@ namespace AddUser.Test
         {
             Task.Run(async () =>
             {
-                var request = TestFactory.CreateHttpRequest("{\"id\": \"4\",\"name\": \"Brandon Schenz\",\"salaray\": 987321}");
+                var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
                 var response = (CreatedResult)await AddUser.Run(request, testLogger);
-                var entity = (EmployeeSessionEntity)response.Value;
+                var entity = (UserEntity)response.Value;
                 Assert.AreEqual(StatusCodes.Status201Created, response.StatusCode);
                 await DeleteTestRecordAsync(entity);
             }).GetAwaiter()
             .GetResult();
         }
 
-        private async Task DeleteTestRecordAsync(EmployeeSessionEntity entity)
+        private async Task DeleteTestRecordAsync(UserEntity entity)
         {
+            var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("Environment"));
+            var environmentString = $"{environment.ToString()}";
+            var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
+
             var table = CloudStorageAccount
                     .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString"))
                     .CreateCloudTableClient()
-                    .GetTableReference("employee");
+                    .GetTableReference(tableName);
 
             await table.CreateIfNotExistsAsync();
 

@@ -19,6 +19,8 @@ namespace AddUser
         {
             try
             {
+                log.LogInformation("Deserialize User");
+                Console.Write("Deserialize User");
                 var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
 
                 if (entity == null)
@@ -26,9 +28,13 @@ namespace AddUser
                     return new BadRequestObjectResult("User not passed");
                 }
 
+                log.LogInformation("Get Table Name based on Environment");
+                Console.WriteLine("Get Table Name based on Environment");
                 var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("Environment"));
                 var environmentString = $"{environment.ToString()}";
                 var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
+                log.LogInformation($"tableName: {tableName}");
+                Console.WriteLine($"tableName: {tableName}");
 
                 var table = CloudStorageAccount
                     .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString"))
@@ -47,6 +53,7 @@ namespace AddUser
             catch (System.Exception ex)
             {
                 log.LogCritical(ex, "Error Adding User");
+                Console.WriteLine(ex);
                 return new BadRequestObjectResult("Error While Adding User");
             }
         }

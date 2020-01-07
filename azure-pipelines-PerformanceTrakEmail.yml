@@ -34,8 +34,7 @@ stages:
       displayName: Test
       inputs:
         command: 'test'
-        projects: |
-          $(workingDirectory)/PerformanceTrakEmail.Test/*.csproj
+        projects: '**/PerformanceTrakEmail.Test/*.csproj'
         arguments: '--collect "Code coverage"'
 
     - task: DotNetCoreCLI@2

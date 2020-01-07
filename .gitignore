@@ -337,3 +337,4 @@ local.settings.json
 
 #private info
 info.txt
+azure-pipelines-PerformanceTrakEmail copy.yml

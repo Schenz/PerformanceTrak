@@ -31,19 +31,18 @@ stages:
 
     steps:
     - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: 'build'
+        projects: '**/PerformanceTrakEmail/*.csproj'
+        arguments: '--output $(System.DefaultWorkingDirectory)/PerformanceTrakEmail/publish_output --configuration Release'
+        
+    - task: DotNetCoreCLI@2
       displayName: Test
       inputs:
         command: 'test'
         projects: '**/PerformanceTrakEmail.Test/*.csproj'
         arguments: '--collect "Code coverage"'
-
-    - task: DotNetCoreCLI@2
-      displayName: Build
-      inputs:
-        command: 'build'
-        projects: |
-          $(workingDirectory)/PerformanceTrakEmail/*.csproj
-        arguments: --output $(System.DefaultWorkingDirectory)/PerformanceTrakEmail/publish_output --configuration Release
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'

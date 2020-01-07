@@ -20,7 +20,7 @@ steps:
       displayName: "Test"
       inputs:
         command: test
-        projects: '**/*test/*.csproj'
+        projects: '**/*.Test/*.csproj'
         arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
     - task: DotNetCoreCLI@2

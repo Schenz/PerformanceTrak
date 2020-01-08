@@ -13,7 +13,7 @@ steps:
       inputs:
         version: '2.1.x'
         packageType: sdk
-    - script: dotnet build --configuration $(buildConfiguration) --output $(System.DefaultWorkingDirectory)/publish_output 
+    - script: dotnet build --output $(System.DefaultWorkingDirectory)/publish_output  --configuration $(buildConfiguration)
       displayName: 'dotnet build $(buildConfiguration)'
 
     - task: DotNetCoreCLI@2
@@ -26,6 +26,8 @@ steps:
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
-        inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        artifactName: drop
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true

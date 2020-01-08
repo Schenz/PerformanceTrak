@@ -4,11 +4,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using PerformanceTrakFunctions.Functions;
 
 namespace PerformanceTrakFunctions.Tests
 {
     [TestClass]
-    public class PerformanceTrakEmailTests
+    public class ContactEmailEmailTests
     {
         private readonly ILogger testLogger = TestFactory.CreateLogger();
 

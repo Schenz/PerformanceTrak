@@ -11,8 +11,9 @@ using SendGrid.Helpers.Mail;
 using SendGrid;
 using System.Net;
 using System.Text;
+using PerformanceTrakFunctions.Models;
 
-namespace PerformanceTrakFunctions
+namespace PerformanceTrakFunctions.Functions
 {
     public static class ContactEmail
     {
@@ -21,22 +22,19 @@ namespace PerformanceTrakFunctions
         {
             try
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                var data = JsonConvert.DeserializeObject<EmailObject>(requestBody);
+                var data = JsonConvert.DeserializeObject<EmailObject>(await new StreamReader(req.Body).ReadToEndAsync());
                 var msg = MailHelper.CreateSingleEmail(new EmailAddress(data.Email, data.FullName), new EmailAddress("bschenz@gmail.com", "Brandon Schenz"), data.Subject, BuildPlainTextContent(data), BuildHtmlContent(data));
                 var response = await new SendGridClient(Environment.GetEnvironmentVariable("SENDGRIDAPIKEY")).SendEmailAsync(msg);
 
                 if (response.StatusCode == HttpStatusCode.Accepted)
                 {
-                    return (ActionResult)new NoContentResult();
+                    return new NoContentResult();
                 }
-                else
-                {
-                    log.LogWarning("SendGrid Failed: StatusCode: {0} Body: {1} Headers: {2}", response.StatusCode, response.Body, response.Headers);
-                    return new BadRequestObjectResult(response.Body);
-                }
+                
+                log.LogWarning("SendGrid Failed: StatusCode: {0} Body: {1} Headers: {2}", response.StatusCode, response.Body, response.Headers);
+                return new BadRequestObjectResult(response.Body);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 log.LogCritical(ex, "Error While Sending Email");
                 return new BadRequestObjectResult("Error While Sending Email");

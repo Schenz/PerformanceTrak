@@ -1,4 +1,4 @@
-﻿namespace PerformanceTrakFunctions
+﻿namespace PerformanceTrakFunctions.Models
 {
     internal class EmailObject
     {

@@ -73,7 +73,7 @@ stages:
 
               steps:
                 - task: AzureFunctionApp@1
-                  displayName: 'Deploy PerformanceTrakEmail Function to dev slot'
+                  displayName: 'Deploy PerformanceTrakEFunctions to dev slot'
                   inputs:
                     azureSubscription: '$(azureSubscription)'
                     appType: functionApp

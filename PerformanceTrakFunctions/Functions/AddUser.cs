@@ -10,9 +10,8 @@ using Newtonsoft.Json;
 using PerformanceTrakFunctions.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using System.Collections;
 
-namespace PerformanceTrakFunctions
+namespace PerformanceTrakFunctions.Functions
 {
     public static class AddUser
     {
@@ -21,13 +20,6 @@ namespace PerformanceTrakFunctions
         {
             try
             {
-                Console.WriteLine();
-                Console.WriteLine("GetEnvironmentVariables: ");
-                foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
-                    Console.WriteLine("  {0} = {1}", de.Key, de.Value);
-
-                log.LogInformation("Deserialize User");
-                Console.WriteLine("Deserialize User");
                 var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
 
                 if (entity == null)
@@ -35,14 +27,9 @@ namespace PerformanceTrakFunctions
                     return new BadRequestObjectResult("User not passed");
                 }
 
-                log.LogInformation("Get Table Name based on Environment");
-                Console.WriteLine("Get Table Name based on Environment");
                 var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
                 var environmentString = $"{environment.ToString()}";
                 var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
-                log.LogInformation($"tableName: {tableName}");
-                Console.WriteLine($"tableName: {tableName}");
-
                 var table = CloudStorageAccount
                     .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
                     .CreateCloudTableClient()
@@ -55,12 +42,11 @@ namespace PerformanceTrakFunctions
 
                 var result = await table.ExecuteAsync(TableOperation.Insert(entity));
 
-                return (ActionResult)new CreatedResult("", entity);
+                return new CreatedResult("", entity);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 log.LogCritical(ex, "Error Adding User");
-                Console.WriteLine(ex);
                 return new BadRequestObjectResult("Error While Adding User");
             }
         }

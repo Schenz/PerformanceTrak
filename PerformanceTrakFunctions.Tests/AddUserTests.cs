@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using PerformanceTrakFunctions.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using PerformanceTrakFunctions.Functions;
 
 namespace PerformanceTrakFunctions.Tests
 {
@@ -42,6 +42,20 @@ namespace PerformanceTrakFunctions.Tests
             .GetResult();
         }
 
+        [TestMethod]
+        public void TestGoodRequestButStorageConnectionError()
+        {
+            ClearEnvironmentVariable();
+
+            Task.Run(async () =>
+            {
+                var request = TestFactory.CreateHttpRequest("{\"id\": \"4\",\"name\": \"Brandon Schenz\",\"salaray\": 987321}");
+                var response = (BadRequestObjectResult)await AddUser.Run(request, testLogger);
+                Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
+            }).GetAwaiter()
+            .GetResult();
+        }
+
         private async Task DeleteTestRecordAsync(UserEntity entity)
         {
             var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
@@ -58,23 +72,6 @@ namespace PerformanceTrakFunctions.Tests
             await table.ExecuteAsync(TableOperation.Delete(entity));
         }
 
-        [TestMethod]
-        public void TestGoodRequestButStorageConnectionError()
-        {
-            ClearEnvironmentVariable();
-
-            Task.Run(async () =>
-            {
-                var request = TestFactory.CreateHttpRequest("{\"id\": \"4\",\"name\": \"Brandon Schenz\",\"salaray\": 987321}");
-                var response = (BadRequestObjectResult)await AddUser.Run(request, testLogger);
-                Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
-            }).GetAwaiter()
-            .GetResult();
-        }
-
-        private void ClearEnvironmentVariable()
-        {
-            Environment.SetEnvironmentVariable("TableStoreConnectionString", null);
-        }
+        private void ClearEnvironmentVariable() => Environment.SetEnvironmentVariable("TableStoreConnectionString", null);
     }
 }

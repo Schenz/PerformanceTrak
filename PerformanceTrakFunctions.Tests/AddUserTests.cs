@@ -45,11 +45,10 @@ namespace PerformanceTrakFunctions.Tests
         [TestMethod]
         public void TestGoodRequestButStorageConnectionError()
         {
-            ClearEnvironmentVariable();
-
             Task.Run(async () =>
             {
-                var request = TestFactory.CreateHttpRequest("{\"id\": \"4\",\"name\": \"Brandon Schenz\",\"salaray\": 987321}");
+                ClearEnvironmentVariable();
+                var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
                 var response = (BadRequestObjectResult)await AddUser.Run(request, testLogger);
                 Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
             }).GetAwaiter()
@@ -72,6 +71,6 @@ namespace PerformanceTrakFunctions.Tests
             await table.ExecuteAsync(TableOperation.Delete(entity));
         }
 
-        private void ClearEnvironmentVariable() => Environment.SetEnvironmentVariable("TableStoreConnectionString", null);
+        private void ClearEnvironmentVariable() => Environment.SetEnvironmentVariable("TABLESTORECONNECTIONSTRING", null);
     }
 }

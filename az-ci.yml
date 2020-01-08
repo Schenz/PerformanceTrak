@@ -1,36 +1,84 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
   buildConfiguration: 'Release'
 
-steps:
-  - task: UseDotNet@2 
-    displayName: ".NET Core 2.1.x"
-    inputs:
-      version: '2.1.x'
-      packageType: sdk
-  - script: dotnet build --output $(System.DefaultWorkingDirectory)/publish_output  --configuration $(buildConfiguration)
-    displayName: 'dotnet build $(buildConfiguration)'
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: '771bc85f-2adc-4bb4-bd90-ed835ec088dc'
 
-  - task: DotNetCoreCLI@2
-    displayName: "Test"
-    inputs:
-      command: test
-      projects: '**/*.Tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
+  # Function app name
+  functionAppName: 'PerformanceTrakFunctions'
 
-  - task: ArchiveFiles@2
-    displayName: 'Archive files'
-    inputs:
-      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
-      includeRootFolder: false
-      archiveType: zip
-      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      replaceExistingArchive: true
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  # Working Directory
+  workingDirectory: '$(System.DefaultWorkingDirectory)/'
+
+stages:
+  - stage: Build
+    displayName: Build stage
+
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+        
+        steps:
+          - task: UseDotNet@2 
+            displayName: ".NET Core 2.1.x"
+            inputs:
+              version: '2.1.x'
+              packageType: sdk
+          
+          - script: dotnet build --output $(System.DefaultWorkingDirectory)/publish_output  --configuration $(buildConfiguration)
+            displayName: 'dotnet build $(buildConfiguration)'
+
+          - task: DotNetCoreCLI@2
+            displayName: "Test"
+            inputs:
+              command: test
+              projects: '**/*.Tests/*.csproj'
+              arguments: '--configuration $(buildConfiguration)'
+
+          - task: ArchiveFiles@2
+            displayName: 'Archive files'
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+              replaceExistingArchive: true
   
-  - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-    artifact: drop
+          - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+            artifact: drop
+
+  - stage: Deploy
+    displayName: Deploy stage
+    dependsOn: Build
+    condition: succeeded()
+
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy
+        environment: 'development'
+        pool:
+          vmImage: $(vmImageName)
+
+        strategy:
+          runOnce:
+            deploy:
+
+              steps:
+                - task: AzureFunctionApp@1
+                  displayName: 'Deploy PerformanceTrakEmail Function to dev slot'
+                  inputs:
+                    azureSubscription: '$(azureSubscription)'
+                    appType: functionApp
+                    appName: $(functionAppName)
+                    package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                    deployToSlotOrASE: true
+                    resourceGroupName: 'PerformanceTrak'
+                    slotName: 'dev'

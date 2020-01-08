@@ -9,9 +9,9 @@ variables:
 
 steps:
     - task: UseDotNet@2 
-      displayName: ".NET Core 3.0.x"
+      displayName: ".NET Core 2.1.x"
       inputs:
-        version: '3.0.x'
+        version: '2.1.x'
         packageType: sdk
     - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'dotnet build $(buildConfiguration)'

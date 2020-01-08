@@ -52,7 +52,7 @@ namespace PerformanceTrakFunctions.Tests
 
         private void ClearSendGridEnvironmentVariables()
         {
-            Environment.SetEnvironmentVariable("SendGridApiKey", null);
+            Environment.SetEnvironmentVariable("SENDGRIDAPIKEY", null);
         }
     }
 }

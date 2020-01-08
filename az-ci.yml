@@ -23,15 +23,14 @@ steps:
         projects: '**/*.Tests/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
 
-    - task: DotNetCoreCLI@2
-      displayName: "Publish"
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
       inputs:
-        command: 'publish'
-        arguments: '-r linux-x64 --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        zipAfterPublish: true
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/PerformanceTrakFunctions/publish_output'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
 
-    - task: PublishBuildArtifacts@1
-      displayName: "Upload Artifacts"
-      inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'performancetrak'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      artifact: drop

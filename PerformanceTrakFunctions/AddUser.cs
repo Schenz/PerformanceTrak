@@ -1,16 +1,17 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Table;
-using Microsoft.WindowsAzure.Storage;
-using System.IO;
 using Newtonsoft.Json;
+using PerformanceTrakFunctions.Models;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AddUser
+namespace PerformanceTrakFunctions
 {
     public static class AddUser
     {
@@ -20,7 +21,7 @@ namespace AddUser
             try
             {
                 log.LogInformation("Deserialize User");
-                Console.Write("Deserialize User");
+                Console.WriteLine("Deserialize User");
                 var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
 
                 if (entity == null)

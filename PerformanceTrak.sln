@@ -1,13 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTrakEmail", "PerformanceTrakEmail\PerformanceTrakEmail.csproj", "{767756CA-063B-4107-A480-05F5B25F4A44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTrakFunctions", "PerformanceTrakFunctions\PerformanceTrakFunctions.csproj", "{36CED6DB-F067-43C7-9306-EAA5B4C4DCB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTrakEmail.Test", "PerformanceTrakEmail.Test\PerformanceTrakEmail.Test.csproj", "{AE286ABF-2F6C-4662-94AD-A73D2248C830}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddUser", "AddUser\AddUser.csproj", "{EF105E7A-1EDC-4EEF-916C-64A7902BE80D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddUser.Test", "AddUser.Test\AddUser.Test.csproj", "{7506B97B-3231-480C-84F6-E95502D23D48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTrakFunctions.Tests", "PerformanceTrakFunctions.Tests\PerformanceTrakFunctions.Tests.csproj", "{39E617DD-E44A-435C-B834-79E5D76C5484}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,29 +18,17 @@ Global
 		{B523945C-7456-4C92-9054-17E0DD8E1808}.Debug|Any CPU.Build.0 = Default|Any CPU
 		{B523945C-7456-4C92-9054-17E0DD8E1808}.Release|Any CPU.ActiveCfg = Default|Any CPU
 		{B523945C-7456-4C92-9054-17E0DD8E1808}.Release|Any CPU.Build.0 = Default|Any CPU
-		{767756CA-063B-4107-A480-05F5B25F4A44}.Default|Any CPU.ActiveCfg = Debug|Any CPU
-		{767756CA-063B-4107-A480-05F5B25F4A44}.Default|Any CPU.Build.0 = Debug|Any CPU
-		{767756CA-063B-4107-A480-05F5B25F4A44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{767756CA-063B-4107-A480-05F5B25F4A44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{767756CA-063B-4107-A480-05F5B25F4A44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{767756CA-063B-4107-A480-05F5B25F4A44}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AE286ABF-2F6C-4662-94AD-A73D2248C830}.Default|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE286ABF-2F6C-4662-94AD-A73D2248C830}.Default|Any CPU.Build.0 = Debug|Any CPU
-		{AE286ABF-2F6C-4662-94AD-A73D2248C830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE286ABF-2F6C-4662-94AD-A73D2248C830}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE286ABF-2F6C-4662-94AD-A73D2248C830}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE286ABF-2F6C-4662-94AD-A73D2248C830}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF105E7A-1EDC-4EEF-916C-64A7902BE80D}.Default|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF105E7A-1EDC-4EEF-916C-64A7902BE80D}.Default|Any CPU.Build.0 = Debug|Any CPU
-		{EF105E7A-1EDC-4EEF-916C-64A7902BE80D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF105E7A-1EDC-4EEF-916C-64A7902BE80D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF105E7A-1EDC-4EEF-916C-64A7902BE80D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF105E7A-1EDC-4EEF-916C-64A7902BE80D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7506B97B-3231-480C-84F6-E95502D23D48}.Default|Any CPU.ActiveCfg = Debug|Any CPU
-		{7506B97B-3231-480C-84F6-E95502D23D48}.Default|Any CPU.Build.0 = Debug|Any CPU
-		{7506B97B-3231-480C-84F6-E95502D23D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7506B97B-3231-480C-84F6-E95502D23D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7506B97B-3231-480C-84F6-E95502D23D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7506B97B-3231-480C-84F6-E95502D23D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CED6DB-F067-43C7-9306-EAA5B4C4DCB2}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CED6DB-F067-43C7-9306-EAA5B4C4DCB2}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{36CED6DB-F067-43C7-9306-EAA5B4C4DCB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CED6DB-F067-43C7-9306-EAA5B4C4DCB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36CED6DB-F067-43C7-9306-EAA5B4C4DCB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36CED6DB-F067-43C7-9306-EAA5B4C4DCB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39E617DD-E44A-435C-B834-79E5D76C5484}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{39E617DD-E44A-435C-B834-79E5D76C5484}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{39E617DD-E44A-435C-B834-79E5D76C5484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39E617DD-E44A-435C-B834-79E5D76C5484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39E617DD-E44A-435C-B834-79E5D76C5484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39E617DD-E44A-435C-B834-79E5D76C5484}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

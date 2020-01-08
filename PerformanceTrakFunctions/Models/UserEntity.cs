@@ -1,7 +1,7 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
-namespace AddUser
+namespace PerformanceTrakFunctions.Models
 {
     public class UserEntity : TableEntity
     {

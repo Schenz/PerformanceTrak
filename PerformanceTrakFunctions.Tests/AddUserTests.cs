@@ -1,13 +1,15 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
+using PerformanceTrakFunctions.Models;
 using Microsoft.AspNetCore.Http;
-using System;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AddUser.Test
+namespace PerformanceTrakFunctions.Tests
 {
     [TestClass]
     public class AddUserTests

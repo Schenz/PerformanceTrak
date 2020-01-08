@@ -1,4 +1,4 @@
-namespace PerformanceTrakEmail
+﻿namespace PerformanceTrakFunctions
 {
     internal class EmailObject
     {

@@ -1,10 +1,10 @@
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace PerformanceTrakEmail.Test
+namespace PerformanceTrakFunctions.Tests
 {
     public class TestFactory
     {

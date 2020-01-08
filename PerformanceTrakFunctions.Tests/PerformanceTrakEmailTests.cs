@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
-namespace PerformanceTrakEmail.Test
+namespace PerformanceTrakFunctions.Tests
 {
     [TestClass]
     public class PerformanceTrakEmailTests
@@ -18,7 +18,7 @@ namespace PerformanceTrakEmail.Test
             Task.Run(async () =>
             {
                 var request = TestFactory.CreateHttpRequest("");
-                var response = (BadRequestObjectResult) await PerformanceTrakEmail.Run(request, testLogger);
+                var response = (BadRequestObjectResult)await ContactEmail.Run(request, testLogger);
                 Assert.AreEqual("Error While Sending Email", response.Value);
             }).GetAwaiter()
             .GetResult();
@@ -30,7 +30,7 @@ namespace PerformanceTrakEmail.Test
             Task.Run(async () =>
             {
                 var request = TestFactory.CreateHttpRequest("{\"Subject\":\"Please Help\",\"Email\":\"brandon.schenz@kroger.com\",\"Phone\":\"513.204.9321\",\"FullName\":\"Brandon Schenz\",\"Message\":\"I need more info RIGHT away!\"}");
-                var response = (NoContentResult) await PerformanceTrakEmail.Run(request, testLogger);
+                var response = (NoContentResult)await ContactEmail.Run(request, testLogger);
                 Assert.AreEqual(StatusCodes.Status204NoContent, response.StatusCode);
             }).GetAwaiter()
             .GetResult();
@@ -44,7 +44,7 @@ namespace PerformanceTrakEmail.Test
             Task.Run(async () =>
             {
                 var request = TestFactory.CreateHttpRequest("{\"Subject\":\"Please Help\",\"Email\":\"brandon.schenz@kroger.com\",\"Phone\":\"513.204.9321\",\"FullName\":\"Brandon Schenz\",\"Message\":\"I need more info RIGHT away!\"}");
-                var response = (BadRequestObjectResult) await PerformanceTrakEmail.Run(request, testLogger);
+                var response = (BadRequestObjectResult)await ContactEmail.Run(request, testLogger);
                 Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
             }).GetAwaiter()
             .GetResult();

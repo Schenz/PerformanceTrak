@@ -7,16 +7,16 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using SendGrid;
 using SendGrid.Helpers.Mail;
+using SendGrid;
 using System.Net;
 using System.Text;
 
-namespace PerformanceTrakEmail
+namespace PerformanceTrakFunctions
 {
-    public static class PerformanceTrakEmail
+    public static class ContactEmail
     {
-        [FunctionName("PerformanceTrackEmail")]
+        [FunctionName("ContactEmail")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ContactEmail")] HttpRequest req, ILogger log)
         {
             try

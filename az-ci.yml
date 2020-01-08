@@ -8,9 +8,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-    - powershell: |
-      # Using an input-macro:
-      Write-Host "This works: $(Environment)"
+    - bash: |
+      echo "my pipeline variable is $(Environment)"
+
     - task: UseDotNet@2 
       displayName: ".NET Core 2.1.x"
       inputs:

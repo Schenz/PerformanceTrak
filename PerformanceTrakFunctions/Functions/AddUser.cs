@@ -29,7 +29,7 @@ namespace PerformanceTrakFunctions.Functions
 
                 var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
                 var environmentString = $"{environment.ToString()}";
-                var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
+                var tableName = $"Users{(environment != Environments.PROD ? environmentString : string.Empty)}";
                 var table = CloudStorageAccount
                     .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
                     .CreateCloudTableClient()

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using PerformanceTrakFunctions.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using System.Collections;
 
 namespace PerformanceTrakFunctions
 {
@@ -20,6 +21,11 @@ namespace PerformanceTrakFunctions
         {
             try
             {
+                Console.WriteLine();
+                Console.WriteLine("GetEnvironmentVariables: ");
+                foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+                    Console.WriteLine("  {0} = {1}", de.Key, de.Value);
+
                 log.LogInformation("Deserialize User");
                 Console.WriteLine("Deserialize User");
                 var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
@@ -31,14 +37,14 @@ namespace PerformanceTrakFunctions
 
                 log.LogInformation("Get Table Name based on Environment");
                 Console.WriteLine("Get Table Name based on Environment");
-                var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("Environment"));
+                var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("Environment", EnvironmentVariableTarget.Process));
                 var environmentString = $"{environment.ToString()}";
                 var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
                 log.LogInformation($"tableName: {tableName}");
                 Console.WriteLine($"tableName: {tableName}");
 
                 var table = CloudStorageAccount
-                    .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString"))
+                    .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString", EnvironmentVariableTarget.Process))
                     .CreateCloudTableClient()
                     .GetTableReference(tableName);
 

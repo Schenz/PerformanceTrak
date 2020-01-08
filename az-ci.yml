@@ -8,8 +8,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-    - script: echo "my pipeline variable is $(Environment)"
-
     - task: UseDotNet@2 
       displayName: ".NET Core 2.1.x"
       inputs:

@@ -44,12 +44,12 @@ namespace PerformanceTrakFunctions.Tests
 
         private async Task DeleteTestRecordAsync(UserEntity entity)
         {
-            var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("Environment"));
+            var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
             var environmentString = $"{environment.ToString()}";
             var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
 
             var table = CloudStorageAccount
-                    .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString"))
+                    .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
                     .CreateCloudTableClient()
                     .GetTableReference(tableName);
 

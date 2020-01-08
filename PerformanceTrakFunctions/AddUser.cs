@@ -37,14 +37,14 @@ namespace PerformanceTrakFunctions
 
                 log.LogInformation("Get Table Name based on Environment");
                 Console.WriteLine("Get Table Name based on Environment");
-                var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("Environment", EnvironmentVariableTarget.Process));
+                var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
                 var environmentString = $"{environment.ToString()}";
                 var tableName = $"user{(environment != Environments.PROD ? environmentString : string.Empty)}";
                 log.LogInformation($"tableName: {tableName}");
                 Console.WriteLine($"tableName: {tableName}");
 
                 var table = CloudStorageAccount
-                    .Parse(Environment.GetEnvironmentVariable("TableStoreConnectionString", EnvironmentVariableTarget.Process))
+                    .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
                     .CreateCloudTableClient()
                     .GetTableReference(tableName);
 

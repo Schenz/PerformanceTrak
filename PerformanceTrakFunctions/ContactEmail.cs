@@ -24,7 +24,7 @@ namespace PerformanceTrakFunctions
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<EmailObject>(requestBody);
                 var msg = MailHelper.CreateSingleEmail(new EmailAddress(data.Email, data.FullName), new EmailAddress("bschenz@gmail.com", "Brandon Schenz"), data.Subject, BuildPlainTextContent(data), BuildHtmlContent(data));
-                var response = await new SendGridClient(Environment.GetEnvironmentVariable("SendGridApiKey")).SendEmailAsync(msg);
+                var response = await new SendGridClient(Environment.GetEnvironmentVariable("SENDGRIDAPIKEY")).SendEmailAsync(msg);
 
                 if (response.StatusCode == HttpStatusCode.Accepted)
                 {

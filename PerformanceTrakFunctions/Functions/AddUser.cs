@@ -20,23 +20,10 @@ namespace PerformanceTrakFunctions.Functions
         {
             try
             {
-                // get headers
-                var headers = req.Headers;
-                log.LogInformation("HEADERS:");
-                foreach (var header in headers)
-                {
-                    log.LogInformation($"{header.Key}: {header.Value}");
+                var user = Util.Security.ValidateUser(req);
+                if (user == null) {
+                    return new ForbidResult("Bearer");
                 }
-                log.LogInformation("");
-
-                // get cookies
-                var cookies = req.Cookies;
-                log.LogInformation("COOKIES:");
-                foreach (var cookie in cookies)
-                {
-                    log.LogInformation($"{cookie.Key}: {cookie.Value}");
-                }
-                log.LogInformation("");
                 
                 var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
 

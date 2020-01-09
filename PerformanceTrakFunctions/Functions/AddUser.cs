@@ -21,15 +21,16 @@ namespace PerformanceTrakFunctions.Functions
             try
             {
                 var user = Util.Security.ValidateUser(req);
-                if (user == null) {
+                if (user == null)
+                {
                     return new ForbidResult("Bearer");
                 }
-                
+
                 var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
 
                 if (entity == null)
                 {
-                    return new BadRequestObjectResult("User not passed");
+                    return new BadRequestObjectResult(new { error = true, message = "User not passed" });
                 }
 
                 var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
@@ -49,10 +50,33 @@ namespace PerformanceTrakFunctions.Functions
 
                 return new CreatedResult("", entity);
             }
+            catch (StorageException ex)
+            {
+                var message = ex.Message;
+                if (message.StartsWith("Conflict"))
+                {
+                    log.LogCritical(ex, "Record Already Exists");
+                    return new ConflictObjectResult(new { error = true, message = "User Already Exists" });
+                }
+                else
+                {
+                    log.LogCritical(ex, $"Error Adding User: {ex.Message}");
+                    return new BadRequestObjectResult("Error While Adding User");
+                }
+            }
             catch (Exception ex)
             {
-                log.LogCritical(ex, $"Error Adding User: {ex.Message}");
-                return new BadRequestObjectResult("Error While Adding User");
+                var message = ex.Message;
+                if (message.StartsWith("IDX10223: Lifetime validation failed"))
+                {
+                    log.LogCritical(ex, "Access Token Expired");
+                    return new ForbidResult("Bearer");
+                }
+                else
+                {
+                    log.LogCritical(ex, $"Error Adding User: {ex.Message}");
+                    return new BadRequestObjectResult("Error While Adding User");
+                }
             }
         }
     }

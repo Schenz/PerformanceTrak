@@ -109,33 +109,11 @@ if (isBrowser) {
 
     setUser(parseJwt(tokens.idToken));
 
+    // TODO: Pass Bearer Auth Header
     if (user.isNew) {
-      const apiUrl = process.env.GATSBY_ADD_USER_FUNCTION_ENDPOINT;
-
-      const options = {
-        method: 'POST',
-        body: JSON.stringify(user),
-        headers: { 'Content-Type': 'application/json' },
-      };
-
-      console.log('call API');
-
-      fetch(apiUrl, options).then(
-        response => {
-          if (response.ok) {
-            // navigate to confirmation page
-            console.log(response);
-          } else {
-            // navigate to error page
-            console.log(response);
-          }
-        },
-        error => {
-          console.error(error);
-          // navigate to error page
-          //navigate('/emailerror/');
-        }
-      );
+      addUser();
+    } else {
+      getUser();
     }
 
     startTimer();
@@ -176,6 +154,7 @@ function setUser(jwt) {
   window.localStorage.setItem('jwt', JSON.stringify(jwt));
 
   user = {
+    eTag: jwt.eTag || '',
     id: jwt.sub,
     name: jwt.name,
     family_name: jwt.family_name,
@@ -185,9 +164,14 @@ function setUser(jwt) {
     postalCode: jwt.postalCode || '',
     state: jwt.state || '',
     streetAddress: jwt.streetAddress || '',
-    email: jwt.emails[0] || '',
     isNew: jwt.newUser || false,
   };
+
+  if (jwt.emails) {
+    jwt.email = jwt.emails[0] || '';
+  } else {
+    jwt.email = jwt.email || '';
+  }
   window.localStorage.setItem('user', JSON.stringify(user));
 }
 
@@ -220,6 +204,65 @@ function startTimer() {
 
 function stopTimer() {
   clearTimeout(t);
+}
+
+function addUser() {
+  const apiUrl = process.env.GATSBY_ADD_USER_FUNCTION_ENDPOINT;
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(user),
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  fetch(apiUrl, options)
+    .then(
+      response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return null;
+        }
+      },
+      error => {
+        console.error(error);
+        navigate('/loginerror/');
+      }
+    )
+    .then(data => {
+      if (data !== null) {
+        setUser(data);
+      }
+    });
+}
+
+function getUser() {
+  const apiUrl = process.env.GATSBY_GET_USER_FUNCTION_ENDPOINT;
+
+  const options = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  fetch(apiUrl, options)
+    .then(
+      response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return null;
+        }
+      },
+      error => {
+        console.error(error);
+        navigate('/loginerror/');
+      }
+    )
+    .then(data => {
+      if (data !== null) {
+        setUser(data);
+      }
+    });
 }
 
 startTimer();

@@ -20,13 +20,31 @@ namespace PerformanceTrakFunctions.Functions
         {
             try
             {
+                // get headers
+                var headers = req.Headers;
+                log.LogInformation("HEADERS:");
+                foreach (var header in headers)
+                {
+                    log.LogInformation($"{header.Key}: {header.Value}");
+                }
+                log.LogInformation("");
+
+                // get cookies
+                var cookies = req.Cookies;
+                log.LogInformation("COOKIES:");
+                foreach (var cookie in cookies)
+                {
+                    log.LogInformation($"{cookie.Key}: {cookie.Value}");
+                }
+                log.LogInformation("");
+                
                 var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
 
                 if (entity == null)
                 {
                     return new BadRequestObjectResult("User not passed");
                 }
-                
+
                 var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
                 var environmentString = $"{environment.ToString()}";
                 var tableName = $"Users{(environment != Environments.PROD ? environmentString : string.Empty)}";
@@ -34,7 +52,7 @@ namespace PerformanceTrakFunctions.Functions
                     .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
                     .CreateCloudTableClient()
                     .GetTableReference(tableName);
-                
+
                 await table.CreateIfNotExistsAsync();
 
                 entity.PartitionKey = entity.FamilyName.Substring(0, 1);

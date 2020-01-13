@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
-namespace PerformanceTrakFunctions.Util
+namespace PerformanceTrakFunctions.Security
 {
     public class AccessTokenProvider : IAccessTokenProvider
     {
@@ -28,7 +28,7 @@ namespace PerformanceTrakFunctions.Util
                     req.Headers[AUTH_HEADER_NAME].ToString().StartsWith(BEARER_PREFIX))
                 {
                     var token = req.Headers[AUTH_HEADER_NAME].ToString().Substring(BEARER_PREFIX.Length);
-                    
+
                     // Create the parameters
                     var tokenParams = new TokenValidationParameters()
                     {

@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using PerformanceTrakFunctions.Functions;
-using PerformanceTrakFunctions.Util;
 using Moq;
+using PerformanceTrakFunctions.Security;
 
 namespace PerformanceTrakFunctions.Tests
 {

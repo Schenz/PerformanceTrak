@@ -1,7 +1,7 @@
 using System;
 using System.Security.Claims;
 
-namespace PerformanceTrakFunctions.Util
+namespace PerformanceTrakFunctions.Security
 {
     /// <summary>
     /// Contains the result of an access token check.

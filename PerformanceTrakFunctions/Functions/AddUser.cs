@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using PerformanceTrakFunctions.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using PerformanceTrakFunctions.Util;
+using PerformanceTrakFunctions.Security;
 
 namespace PerformanceTrakFunctions.Functions
 {

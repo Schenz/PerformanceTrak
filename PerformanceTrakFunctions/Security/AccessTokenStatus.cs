@@ -1,4 +1,4 @@
-namespace PerformanceTrakFunctions.Util
+namespace PerformanceTrakFunctions.Security
 {
     public enum AccessTokenStatus
     {

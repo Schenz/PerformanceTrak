@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using PerformanceTrakFunctions.Repository;
 using PerformanceTrakFunctions.Security;
 
 [assembly: FunctionsStartup(typeof(PerformanceTrakFunctions.Startup))]
@@ -20,6 +21,8 @@ namespace PerformanceTrakFunctions
 
             // Register the access token provider as a singleton
             builder.Services.AddSingleton<IAccessTokenProvider, AccessTokenProvider>(s => new AccessTokenProvider(audience, issuer));
+            builder.Services.AddSingleton<IUserRepository, UserRepository>(s => new UserRepository());
+            builder.Services.AddSingleton<ISendGridClient, MySendGridClient>(s => new MySendGridClient());
         }
     }
 }

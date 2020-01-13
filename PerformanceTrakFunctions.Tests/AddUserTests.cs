@@ -10,6 +10,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 using PerformanceTrakFunctions.Functions;
 using Moq;
 using PerformanceTrakFunctions.Security;
+using PerformanceTrakFunctions.Repository;
 
 namespace PerformanceTrakFunctions.Tests
 {
@@ -19,6 +20,7 @@ namespace PerformanceTrakFunctions.Tests
         private AddUser _fixture;
 
         private Mock<IAccessTokenProvider> tokenProvider;
+        private Mock<IUserRepository> userRepository;
 
         private readonly ILogger testLogger = TestFactory.CreateLogger();
 
@@ -26,7 +28,8 @@ namespace PerformanceTrakFunctions.Tests
         public void Setup()
         {
             tokenProvider = new Mock<IAccessTokenProvider>();
-            _fixture = new AddUser(tokenProvider.Object);
+            userRepository = new Mock<IUserRepository>();
+            _fixture = new AddUser(tokenProvider.Object, userRepository.Object);
         }
 
         [TestMethod]
@@ -67,11 +70,39 @@ namespace PerformanceTrakFunctions.Tests
                 var principal = AccessTokenResult.Success(new System.Security.Claims.ClaimsPrincipal());
                 tokenProvider.Setup(t => t.ValidateToken(It.IsAny<HttpRequest>())).Returns(principal);
 
+                var userEntity = new UserEntity()
+                {
+                    Id = "TEST",
+                    Name = "Test User",
+                    FamilyName = "User",
+                    GivenName = "Test",
+                    City = "",
+                    Country = "",
+                    PostalCode = "",
+                    State = "",
+                    StreetAddress = "",
+                    Email = "test.user@daomin.com",
+                };
+
+                var tableResult = new TableResult();
+                tableResult.Result = userEntity;
+                tableResult.HttpStatusCode = StatusCodes.Status201Created;
+                userRepository.Setup(t => t.Add(It.IsAny<UserEntity>())).Returns(tableResult);
+
                 var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
                 var response = (CreatedResult)await _fixture.Run(request, testLogger);
-                var entity = (UserEntity)response.Value;
                 Assert.AreEqual(StatusCodes.Status201Created, response.StatusCode);
-                await DeleteTestRecordAsync(entity);
+                var returnEntity = (UserEntity)((TableResult)response.Value).Result;
+                Assert.AreEqual(userEntity.Id, returnEntity.Id);
+                Assert.AreEqual(userEntity.Name, returnEntity.Name);
+                Assert.AreEqual(userEntity.FamilyName, returnEntity.FamilyName);
+                Assert.AreEqual(userEntity.GivenName, returnEntity.GivenName);
+                Assert.AreEqual(userEntity.City, returnEntity.City);
+                Assert.AreEqual(userEntity.Country, returnEntity.Country);
+                Assert.AreEqual(userEntity.PostalCode, returnEntity.PostalCode);
+                Assert.AreEqual(userEntity.State, returnEntity.State);
+                Assert.AreEqual(userEntity.StreetAddress, returnEntity.StreetAddress);
+                Assert.AreEqual(userEntity.Email, returnEntity.Email);
             }).GetAwaiter()
             .GetResult();
         }
@@ -84,13 +115,30 @@ namespace PerformanceTrakFunctions.Tests
                 var principal = AccessTokenResult.Success(new System.Security.Claims.ClaimsPrincipal());
                 tokenProvider.Setup(t => t.ValidateToken(It.IsAny<HttpRequest>())).Returns(principal);
 
-                var request1 = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
-                var request2 = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
-                var response = (CreatedResult)_fixture.Run(request1, testLogger).Result;
-                var response2 = (ConflictObjectResult)_fixture.Run(request2, testLogger).Result;
-                var entity = (UserEntity)response.Value;
-                Assert.AreEqual(StatusCodes.Status409Conflict, response2.StatusCode);
-                await DeleteTestRecordAsync(entity);
+                var exception = new StorageException("Conflict");
+                userRepository.Setup(t => t.Add(It.IsAny<UserEntity>())).Throws(exception);
+
+                var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
+                var response = (ConflictObjectResult)await _fixture.Run(request, testLogger);
+                Assert.AreEqual(StatusCodes.Status409Conflict, response.StatusCode);
+            }).GetAwaiter()
+            .GetResult();
+        }
+
+        [TestMethod]
+        public void TestStorageExceptionNotDuplicateReturnsBadRequest()
+        {
+            Task.Run(async () =>
+            {
+                var principal = AccessTokenResult.Success(new System.Security.Claims.ClaimsPrincipal());
+                tokenProvider.Setup(t => t.ValidateToken(It.IsAny<HttpRequest>())).Returns(principal);
+
+                var exception = new StorageException("");
+                userRepository.Setup(t => t.Add(It.IsAny<UserEntity>())).Throws(exception);
+
+                var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
+                var response = (BadRequestObjectResult)await _fixture.Run(request, testLogger);
+                Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
             }).GetAwaiter()
             .GetResult();
         }
@@ -100,10 +148,11 @@ namespace PerformanceTrakFunctions.Tests
         {
             Task.Run(async () =>
             {
-                ClearEnvironmentVariable();
-
                 var principal = AccessTokenResult.Success(new System.Security.Claims.ClaimsPrincipal());
                 tokenProvider.Setup(t => t.ValidateToken(It.IsAny<HttpRequest>())).Returns(principal);
+
+                var exception = new NullReferenceException("");
+                userRepository.Setup(t => t.Add(It.IsAny<UserEntity>())).Throws(exception);
 
                 var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
                 var response = (BadRequestObjectResult)await _fixture.Run(request, testLogger);
@@ -111,23 +160,5 @@ namespace PerformanceTrakFunctions.Tests
             }).GetAwaiter()
             .GetResult();
         }
-
-        private async Task DeleteTestRecordAsync(UserEntity entity)
-        {
-            var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
-            var environmentString = $"{environment.ToString()}";
-            var tableName = $"Users{(environment != Environments.PROD ? environmentString : string.Empty)}";
-
-            var table = CloudStorageAccount
-                    .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
-                    .CreateCloudTableClient()
-                    .GetTableReference(tableName);
-
-            await table.CreateIfNotExistsAsync();
-
-            await table.ExecuteAsync(TableOperation.Delete(entity));
-        }
-
-        private void ClearEnvironmentVariable() => Environment.SetEnvironmentVariable("TABLESTORECONNECTIONSTRING", null);
     }
 }

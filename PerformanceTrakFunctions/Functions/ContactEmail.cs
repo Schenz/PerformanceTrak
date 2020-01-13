@@ -7,24 +7,31 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using SendGrid.Helpers.Mail;
-using SendGrid;
 using System.Net;
 using System.Text;
 using PerformanceTrakFunctions.Models;
+using PerformanceTrakFunctions.Repository;
+using SendGrid.Helpers.Mail;
 
 namespace PerformanceTrakFunctions.Functions
 {
-    public static class ContactEmail
+    public class ContactEmail
     {
+        private readonly ISendGridClient _sendGridClient;
+
+        public ContactEmail(ISendGridClient sendGridClient)
+        {
+            _sendGridClient = sendGridClient;
+        }
+
         [FunctionName("ContactEmail")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ContactEmail")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ContactEmail")] HttpRequest req, ILogger log)
         {
             try
             {
                 var data = JsonConvert.DeserializeObject<EmailObject>(await new StreamReader(req.Body).ReadToEndAsync());
                 var msg = MailHelper.CreateSingleEmail(new EmailAddress(data.Email, data.FullName), new EmailAddress("bschenz@gmail.com", "Brandon Schenz"), data.Subject, BuildPlainTextContent(data), BuildHtmlContent(data));
-                var response = await new SendGridClient(Environment.GetEnvironmentVariable("SENDGRIDAPIKEY")).SendEmailAsync(msg);
+                var response = _sendGridClient.SendEmail(msg);
 
                 if (response.StatusCode == HttpStatusCode.Accepted)
                 {

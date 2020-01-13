@@ -9,8 +9,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PerformanceTrakFunctions.Models;
 using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
 using PerformanceTrakFunctions.Security;
+using PerformanceTrakFunctions.Repository;
 
 namespace PerformanceTrakFunctions.Functions
 {
@@ -18,9 +18,12 @@ namespace PerformanceTrakFunctions.Functions
     {
         private readonly IAccessTokenProvider _tokenProvider;
 
-        public AddUser(IAccessTokenProvider tokenProvider)
+        private readonly IUserRepository _userRepository;
+
+        public AddUser(IAccessTokenProvider tokenProvider, IUserRepository userRepository)
         {
             _tokenProvider = tokenProvider;
+            _userRepository = userRepository;
         }
 
         [FunctionName("AddUser")]
@@ -39,23 +42,10 @@ namespace PerformanceTrakFunctions.Functions
                         return new BadRequestObjectResult(new { error = true, message = "User not passed" });
                     }
 
-                    // TODO: Implement a repository pattern so that I can inject different mocks or error conditions for testing
-                    var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
-                    var environmentString = $"{environment.ToString()}";
-                    var tableName = $"Users{(environment != Environments.PROD ? environmentString : string.Empty)}";
-                    var table = CloudStorageAccount
-                        .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
-                        .CreateCloudTableClient()
-                        .GetTableReference(tableName);
-
-                    await table.CreateIfNotExistsAsync();
-
                     entity.PartitionKey = entity.FamilyName.Substring(0, 1);
                     entity.RowKey = entity.Id.ToString();
 
-                    await table.ExecuteAsync(TableOperation.Insert(entity));
-
-                    return new CreatedResult("", entity);
+                    return new CreatedResult("", _userRepository.Add(entity));
                 }
                 else
                 {

@@ -23,7 +23,7 @@ namespace PerformanceTrakFunctions.Tests
         private Mock<IUserRepository> userRepository;
 
         private readonly ILogger testLogger = TestFactory.CreateLogger();
-
+        
         [TestInitialize]
         public void Setup()
         {

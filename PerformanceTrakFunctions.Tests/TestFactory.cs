@@ -18,21 +18,11 @@ namespace PerformanceTrakFunctions.Tests
             return stream;
         }
 
-        public static DefaultHttpRequest CreateHttpRequest(string body)
+        public static DefaultHttpRequest CreateHttpRequest(string body) => new DefaultHttpRequest(new DefaultHttpContext())
         {
-            var request = new DefaultHttpRequest(new DefaultHttpContext())
-            {
-                Body = GenerateStreamFromString(body)
-            };
+            Body = GenerateStreamFromString(body)
+        };
 
-            return request;
-        }
-
-        public static ILogger CreateLogger()
-        {
-            ILogger logger = NullLoggerFactory.Instance.CreateLogger("Null Logger");
-
-            return logger;
-        }
+        public static ILogger CreateLogger() => NullLoggerFactory.Instance.CreateLogger("Null Logger");
     }
 }

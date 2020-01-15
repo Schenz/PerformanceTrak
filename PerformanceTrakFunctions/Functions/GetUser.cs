@@ -41,7 +41,7 @@ namespace PerformanceTrakFunctions.Functions
                 }
                 
                 log.LogError("Unauthorized User");
-                log.LogError(JsonConvert.SerializeObject(result.Status));
+                log.LogError(JsonConvert.SerializeObject(result));
 
                 return new UnauthorizedResult();
             }

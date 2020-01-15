@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using PerformanceTrakFunctions.Security;
 using PerformanceTrakFunctions.Repository;
+using Newtonsoft.Json;
 
 namespace PerformanceTrakFunctions.Functions
 {
@@ -39,6 +40,9 @@ namespace PerformanceTrakFunctions.Functions
                     return new OkObjectResult(await _userRepository.Get(partitionKey, rowKey));
                 }
                 
+                log.LogError("Unauthorized User");
+                log.LogError(JsonConvert.SerializeObject(result.Status));
+
                 return new UnauthorizedResult();
             }
             catch (Exception ex)

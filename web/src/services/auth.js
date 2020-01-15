@@ -241,7 +241,10 @@ function getUser() {
 
   const options = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${tokens.accessToken}`
+    },
   };
 
   var partitionKey = user.family_name.substring(0, 1);
@@ -262,6 +265,7 @@ function getUser() {
       }
     )
     .then(data => {
+      console.log("Set User from API result: ", data)
       if (data !== null) {
         setUser(data);
       }

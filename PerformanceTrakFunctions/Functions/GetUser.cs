@@ -23,7 +23,7 @@ namespace PerformanceTrakFunctions.Functions
         }
 
         [FunctionName("GetUser")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "GetUser/{partitionKey?}/{rowKey?}")] HttpRequest req, string partitionKey, string rowKey, ILogger log)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "GetUser/{partitionKey?}/{rowKey?}")] HttpRequest req, string partitionKey, string rowKey, ILogger log)
         {
             try
             {

@@ -87,7 +87,7 @@ namespace PerformanceTrakFunctions.Tests
                 var tableResult = new TableResult();
                 tableResult.Result = userEntity;
                 tableResult.HttpStatusCode = StatusCodes.Status201Created;
-                userRepository.Setup(t => t.Add(It.IsAny<UserEntity>())).Returns(tableResult);
+                userRepository.Setup(t => t.Add(It.IsAny<UserEntity>())).Returns(Task.FromResult(tableResult));
 
                 var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"name\": \"Test User\",\"family_name\": \"User\",\"given_name\": \"Test\",\"city\": \"\",\"country\": \"\",\"postalCode\": \"\",\"state\": \"\",\"streetAddress\": \"\",\"email\": \"test.user@daomin.com\",\"isNew\": false,}");
                 var response = (CreatedResult)await _fixture.Run(request, testLogger);

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using PerformanceTrakFunctions.Models;
@@ -7,7 +8,11 @@ namespace PerformanceTrakFunctions.Repository
 {
     public class UserRepository : IUserRepository
     {
-        public TableResult Add(UserEntity entity)
+        public async Task<TableResult> Add(UserEntity entity) => await (await GetTable()).ExecuteAsync(TableOperation.Insert(entity));
+
+        public async Task<UserEntity> Get(string partitionKey, string rowKey) => (UserEntity)(await (await GetTable()).ExecuteAsync(TableOperation.Retrieve<UserEntity>(partitionKey, rowKey))).Result;
+
+        private static async Task<CloudTable> GetTable()
         {
             var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
             var environmentString = $"{environment.ToString()}";
@@ -17,9 +22,9 @@ namespace PerformanceTrakFunctions.Repository
                 .CreateCloudTableClient()
                 .GetTableReference(tableName);
 
-            table.CreateIfNotExistsAsync().Wait();
-
-            return table.ExecuteAsync(TableOperation.Insert(entity)).Result;
+            await table.CreateIfNotExistsAsync();
+            
+            return table;
         }
     }
 }

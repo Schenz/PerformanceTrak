@@ -244,7 +244,10 @@ function getUser() {
     headers: { 'Content-Type': 'application/json' },
   };
 
-  fetch(apiUrl, options)
+  var partitionKey = user.family_name.substring(0, 1);
+  var rowKey = user.id;
+
+  fetch(`${apiUrl}/${partitionKey}/${rowKey}`, options)
     .then(
       response => {
         if (response.ok) {

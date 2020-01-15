@@ -33,24 +33,22 @@ namespace PerformanceTrakFunctions.Functions
             {
                 var result = _tokenProvider.ValidateToken(req);
 
-                if (result.Status == AccessTokenStatus.Valid)
-                {
-                    var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
-
-                    if (entity == null)
-                    {
-                        return new BadRequestObjectResult(new { error = true, message = "User not passed" });
-                    }
-
-                    entity.PartitionKey = entity.FamilyName.Substring(0, 1);
-                    entity.RowKey = entity.Id.ToString();
-
-                    return new CreatedResult("", _userRepository.Add(entity));
-                }
-                else
+                if (result.Status != AccessTokenStatus.Valid)
                 {
                     return new UnauthorizedResult();
                 }
+                
+                var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
+
+                if (entity == null)
+                {
+                    return new BadRequestObjectResult(new { error = true, message = "User not passed" });
+                }
+
+                entity.PartitionKey = entity.FamilyName.Substring(0, 1);
+                entity.RowKey = entity.Id.ToString();
+
+                return new CreatedResult("", await _userRepository.Add(entity));
             }
             catch (StorageException ex)
             {
@@ -60,11 +58,9 @@ namespace PerformanceTrakFunctions.Functions
                     log.LogCritical(ex, "Record Already Exists");
                     return new ConflictObjectResult(new { error = true, message = "User Already Exists" });
                 }
-                else
-                {
-                    log.LogCritical(ex, $"Error Adding User: {ex.Message}");
-                    return new BadRequestObjectResult("Error While Adding User");
-                }
+                
+                log.LogCritical(ex, $"Error Adding User: {ex.Message}");
+                return new BadRequestObjectResult("Error While Adding User");
             }
             catch (Exception ex)
             {

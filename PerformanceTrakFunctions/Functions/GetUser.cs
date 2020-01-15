@@ -42,13 +42,15 @@ namespace PerformanceTrakFunctions.Functions
 
                 log.LogError("Unauthorized User");
                 var authResultStatus = JsonConvert.SerializeObject(result.Status, Formatting.Indented);
-                log.LogError(authResultStatus);
+                log.LogError($"Status: {authResultStatus}");
 
                 var authResultPrincipal = JsonConvert.SerializeObject(result.Principal, Formatting.Indented);
-                log.LogError(authResultPrincipal);
+                log.LogError($"Principal: {authResultPrincipal}");
 
-                var authResultException = JsonConvert.SerializeObject(result.Exception, Formatting.Indented);
-                log.LogError(authResultException);
+                //var authResultException = JsonConvert.SerializeObject(result.Exception, Formatting.Indented);
+                log.LogError($"Exception Message: {result.Exception.Message}");
+
+                log.LogError($"Exception.ToString(): {result.Exception.ToString()}");
 
                 return new UnauthorizedResult();
             }

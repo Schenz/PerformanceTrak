@@ -36,12 +36,15 @@ namespace PerformanceTrakFunctions.Functions
                     {
                         return new BadRequestObjectResult(new { error = true, message = "Please Pass both PartitionKey and RowKey" });
                     }
-                    
+
                     return new OkObjectResult(await _userRepository.Get(partitionKey, rowKey));
                 }
-                
+
                 log.LogError("Unauthorized User");
-                log.LogError(JsonConvert.SerializeObject(result));
+                log.LogError(JsonConvert.SerializeObject(result, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                }));
 
                 return new UnauthorizedResult();
             }

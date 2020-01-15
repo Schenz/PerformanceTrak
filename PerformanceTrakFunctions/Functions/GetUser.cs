@@ -41,11 +41,14 @@ namespace PerformanceTrakFunctions.Functions
                 }
 
                 log.LogError("Unauthorized User");
-                var authResult = JsonConvert.SerializeObject(result, Formatting.Indented, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-                });
-                log.LogError(authResult);
+                var authResultStatus = JsonConvert.SerializeObject(result.Status, Formatting.Indented);
+                log.LogError(authResultStatus);
+
+                var authResultPrincipal = JsonConvert.SerializeObject(result.Principal, Formatting.Indented);
+                log.LogError(authResultPrincipal);
+
+                var authResultException = JsonConvert.SerializeObject(result.Exception, Formatting.Indented);
+                log.LogError(authResultException);
 
                 return new UnauthorizedResult();
             }

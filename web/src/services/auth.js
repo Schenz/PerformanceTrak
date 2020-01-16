@@ -168,9 +168,9 @@ function setUser(jwt) {
   };
 
   if (jwt.emails) {
-    jwt.email = jwt.emails[0] || '';
+    user.email = jwt.emails[0] || '';
   } else {
-    jwt.email = jwt.email || '';
+    user.email = jwt.email || '';
   }
   window.localStorage.setItem('user', JSON.stringify(user));
 }

@@ -109,7 +109,6 @@ if (isBrowser) {
 
     setUser(parseJwt(tokens.idToken));
 
-    // TODO: Pass Bearer Auth Header
     if (user.isNew) {
       addUser();
     } else {
@@ -212,7 +211,9 @@ function addUser() {
   const options = {
     method: 'POST',
     body: JSON.stringify(user),
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json' },
+      'Authorization': `Bearer ${tokens.accessToken}`
   };
 
   fetch(apiUrl, options)

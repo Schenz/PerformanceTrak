@@ -44,9 +44,7 @@ export const login = displayType => {
 export const logout = () => {
   stopTimer();
   if (isBrowser) {
-    console.log('isBrowser');
     if (online()) {
-      console.log('online');
       navigate('/');
       hello('adB2CSignInSignUp')
         .logout()
@@ -75,6 +73,11 @@ export const getProfile = () => {
   return user;
 };
 
+export const tokens = {
+  idToken: false,
+  accessToken: false,
+};
+
 let applicationId, scope, responseType, user, t, timer_is_on;
 
 applicationId = '27d341d7-c9cf-409d-a134-cf8fe167463e';
@@ -83,11 +86,6 @@ responseType = 'token id_token';
 timer_is_on = false;
 
 user = {};
-
-const tokens = {
-  idToken: false,
-  accessToken: false,
-};
 
 if (isBrowser) {
   hello.init(
@@ -149,7 +147,6 @@ function parseJwt(token) {
 }
 
 function setUser(jwt) {
-  console.log(jwt);
   window.localStorage.setItem('jwt', JSON.stringify(jwt));
 
   user = {
@@ -180,7 +177,7 @@ function online() {
   if (isBrowser) {
     session = hello('adB2CSignInSignUp').getAuthResponse();
     currentTime = new Date().getTime() / 1000; //seconds since 1 January 1970 00:00:00.
-
+    
     return session && session.access_token && session.expires > currentTime;
   }
 }
@@ -266,7 +263,6 @@ function getUser() {
       }
     )
     .then(data => {
-      console.log("Set User from API result: ", data)
       if (data !== null) {
         setUser(data);
       }

@@ -33,8 +33,6 @@ export default class Contact extends React.Component {
             headers: { "Content-Type": "application/json" },
         }
 
-        console.log("call API");
-
         fetch(apiUrl, options).then(
             (response) => {
                 if(response.ok) {

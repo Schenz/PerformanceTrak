@@ -11,10 +11,10 @@ export const isBrowser = typeof window !== 'undefined';
 
 const App = () => {
   if (isBrowser) {
+    console.log('isBrowser');
     if (!isAuthenticated()) {
+      console.log('not authhenticated');
       navigate('/');
-    } else {
-      navigate('/app/profile/');
     }
   }
 

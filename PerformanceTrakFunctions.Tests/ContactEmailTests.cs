@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -32,55 +30,43 @@ namespace PerformanceTrakFunctions.Tests
         [TestMethod]
         public void TestBadRequest()
         {
-            Task.Run(async () =>
-            {
-                var stringContent = new StringContent("");
-                var tempResponse = new HttpResponseMessage();
-                tempResponse.Headers.Add("deviceId","1234");
-                SendGrid.Response response1 = new SendGrid.Response(HttpStatusCode.Accepted, stringContent, tempResponse.Headers);
-                sendGridClient.Setup(t => t.SendEmail(It.IsAny<SendGridMessage>())).Returns(response1);
+            var stringContent = new StringContent("");
+            var tempResponse = new HttpResponseMessage();
+            tempResponse.Headers.Add("deviceId", "1234");
+            SendGrid.Response response1 = new SendGrid.Response(HttpStatusCode.Accepted, stringContent, tempResponse.Headers);
+            sendGridClient.Setup(t => t.SendEmail(It.IsAny<SendGridMessage>())).Returns(response1);
 
-                var request = TestFactory.CreateHttpRequest("");
-                var response = (BadRequestObjectResult)await _fixture.Run(request, testLogger);
-                Assert.AreEqual("Error While Sending Email", response.Value);
-            }).GetAwaiter()
-            .GetResult();
+            var request = TestFactory.CreateHttpRequest("");
+            var response = (BadRequestObjectResult)_fixture.Run(request, testLogger);
+            Assert.AreEqual("Error While Sending Email", response.Value);
         }
 
         [TestMethod]
         public void TestGoodRequest()
         {
-            Task.Run(async () =>
-            {
-                var stringContent = new StringContent("");
-                var tempResponse = new HttpResponseMessage();
-                tempResponse.Headers.Add("deviceId","1234");
-                SendGrid.Response response1 = new SendGrid.Response(HttpStatusCode.Accepted, stringContent, tempResponse.Headers);
-                sendGridClient.Setup(t => t.SendEmail(It.IsAny<SendGridMessage>())).Returns(response1);
+            var stringContent = new StringContent("");
+            var tempResponse = new HttpResponseMessage();
+            tempResponse.Headers.Add("deviceId", "1234");
+            SendGrid.Response response1 = new SendGrid.Response(HttpStatusCode.Accepted, stringContent, tempResponse.Headers);
+            sendGridClient.Setup(t => t.SendEmail(It.IsAny<SendGridMessage>())).Returns(response1);
 
-                var request = TestFactory.CreateHttpRequest("{\"Subject\":\"Please Help\",\"Email\":\"brandon.schenz@kroger.com\",\"Phone\":\"513.204.9321\",\"FullName\":\"Brandon Schenz\",\"Message\":\"I need more info RIGHT away!\"}");
-                var response = (NoContentResult)await _fixture.Run(request, testLogger);
-                Assert.AreEqual(StatusCodes.Status204NoContent, response.StatusCode);
-            }).GetAwaiter()
-            .GetResult();
+            var request = TestFactory.CreateHttpRequest("{\"Subject\":\"Please Help\",\"Email\":\"brandon.schenz@kroger.com\",\"Phone\":\"513.204.9321\",\"FullName\":\"Brandon Schenz\",\"Message\":\"I need more info RIGHT away!\"}");
+            var response = (NoContentResult)_fixture.Run(request, testLogger);
+            Assert.AreEqual(StatusCodes.Status204NoContent, response.StatusCode);
         }
 
         [TestMethod]
         public void TestGoodRequestButSendGridError()
         {
-            Task.Run(async () =>
-            {
-                var stringContent = new StringContent("");
-                var tempResponse = new HttpResponseMessage();
-                tempResponse.Headers.Add("deviceId","1234");
-                SendGrid.Response response1 = new SendGrid.Response(HttpStatusCode.BadRequest, stringContent, tempResponse.Headers);
-                sendGridClient.Setup(t => t.SendEmail(It.IsAny<SendGridMessage>())).Returns(response1);
+            var stringContent = new StringContent("");
+            var tempResponse = new HttpResponseMessage();
+            tempResponse.Headers.Add("deviceId", "1234");
+            SendGrid.Response response1 = new SendGrid.Response(HttpStatusCode.BadRequest, stringContent, tempResponse.Headers);
+            sendGridClient.Setup(t => t.SendEmail(It.IsAny<SendGridMessage>())).Returns(response1);
 
-                var request = TestFactory.CreateHttpRequest("{\"Subject\":\"Please Help\",\"Email\":\"brandon.schenz@kroger.com\",\"Phone\":\"513.204.9321\",\"FullName\":\"Brandon Schenz\",\"Message\":\"I need more info RIGHT away!\"}");
-                var response = (BadRequestObjectResult)await _fixture.Run(request, testLogger);
-                Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
-            }).GetAwaiter()
-            .GetResult();
+            var request = TestFactory.CreateHttpRequest("{\"Subject\":\"Please Help\",\"Email\":\"brandon.schenz@kroger.com\",\"Phone\":\"513.204.9321\",\"FullName\":\"Brandon Schenz\",\"Message\":\"I need more info RIGHT away!\"}");
+            var response = (BadRequestObjectResult)_fixture.Run(request, testLogger);
+            Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
         }
     }
 }

@@ -25,13 +25,12 @@ namespace PerformanceTrakFunctions.Functions
         }
 
         [FunctionName("ContactEmail")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ContactEmail")] HttpRequest req, ILogger log)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ContactEmail")] HttpRequest req, ILogger log)
         {
             try
             {
-                var data = JsonConvert.DeserializeObject<EmailObject>(await new StreamReader(req.Body).ReadToEndAsync());
-                var msg = MailHelper.CreateSingleEmail(new EmailAddress(data.Email, data.FullName), new EmailAddress("bschenz@gmail.com", "Brandon Schenz"), data.Subject, BuildPlainTextContent(data), BuildHtmlContent(data));
-                var response = _sendGridClient.SendEmail(msg);
+                var data = JsonConvert.DeserializeObject<EmailObject>(new StreamReader(req.Body).ReadToEnd());
+                var response = _sendGridClient.SendEmail(MailHelper.CreateSingleEmail(new EmailAddress(data.Email, data.FullName), new EmailAddress("bschenz@gmail.com", "Brandon Schenz"), data.Subject, BuildPlainTextContent(data), BuildHtmlContent(data)));
 
                 if (response.StatusCode == HttpStatusCode.Accepted)
                 {

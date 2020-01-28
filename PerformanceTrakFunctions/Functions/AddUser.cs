@@ -27,7 +27,7 @@ namespace PerformanceTrakFunctions.Functions
         }
 
         [FunctionName("AddUser")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "AddUser")] HttpRequest req, ILogger log)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "AddUser")] HttpRequest req, ILogger log)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace PerformanceTrakFunctions.Functions
                     return new UnauthorizedResult();
                 }
                 
-                var entity = JsonConvert.DeserializeObject<UserEntity>(await new StreamReader(req.Body).ReadToEndAsync());
+                var entity = JsonConvert.DeserializeObject<UserEntity>(new StreamReader(req.Body).ReadToEnd());
 
                 if (entity == null)
                 {
@@ -48,7 +48,7 @@ namespace PerformanceTrakFunctions.Functions
                 entity.PartitionKey = entity.FamilyName.Substring(0, 1);
                 entity.RowKey = entity.Id.ToString();
 
-                return new CreatedResult("", await _userRepository.Add(entity));
+                return new CreatedResult("", _userRepository.Add(entity).Result);
             }
             catch (StorageException ex)
             {

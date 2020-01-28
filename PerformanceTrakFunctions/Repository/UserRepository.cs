@@ -12,6 +12,15 @@ namespace PerformanceTrakFunctions.Repository
 
         public async Task<UserEntity> Get(string partitionKey, string rowKey) => (UserEntity)(await (await GetTable()).ExecuteAsync(TableOperation.Retrieve<UserEntity>(partitionKey, rowKey))).Result;
 
+        public async Task<TableResult> Update (UserEntity entity) {
+            var table = await GetTable();
+            
+            entity.ETag = "*";
+            var updatedEntity = await table.ExecuteAsync(TableOperation.Merge(entity));
+
+            return updatedEntity;
+        }
+
         private static async Task<CloudTable> GetTable()
         {
             var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));

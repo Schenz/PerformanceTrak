@@ -24,35 +24,23 @@ namespace PerformanceTrakFunctions.Functions
         }
 
         [FunctionName("GetUser")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "GetUser/{partitionKey?}/{rowKey?}")] HttpRequest req, string partitionKey, string rowKey, ILogger log)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetUser/{partitionKey?}/{rowKey?}")] HttpRequest req, string partitionKey, string rowKey, ILogger log)
         {
             try
             {
                 var result = _tokenProvider.ValidateToken(req);
 
-                if (result.Status == AccessTokenStatus.Valid)
+                if (result.Status != AccessTokenStatus.Valid)
                 {
-                    if (string.IsNullOrWhiteSpace(partitionKey) || string.IsNullOrWhiteSpace(rowKey))
-                    {
-                        return new BadRequestObjectResult(new { error = true, message = "Please Pass both PartitionKey and RowKey" });
-                    }
-
-                    return new OkObjectResult(await _userRepository.Get(partitionKey, rowKey));
+                    return new UnauthorizedResult();
                 }
 
-                log.LogError("Unauthorized User");
-                var authResultStatus = JsonConvert.SerializeObject(result.Status, Formatting.Indented);
-                log.LogError($"Status: {authResultStatus}");
+                if (string.IsNullOrWhiteSpace(partitionKey) || string.IsNullOrWhiteSpace(rowKey))
+                {
+                    return new BadRequestObjectResult(new { error = true, message = "Please Pass both PartitionKey and RowKey" });
+                }
 
-                var authResultPrincipal = JsonConvert.SerializeObject(result.Principal, Formatting.Indented);
-                log.LogError($"Principal: {authResultPrincipal}");
-
-                //var authResultException = JsonConvert.SerializeObject(result.Exception, Formatting.Indented);
-                log.LogError($"Exception Message: {result.Exception.Message}");
-
-                log.LogError($"Exception.ToString(): {result.Exception.ToString()}");
-
-                return new UnauthorizedResult();
+                return new OkObjectResult(await _userRepository.Get(partitionKey, rowKey));
             }
             catch (Exception ex)
             {

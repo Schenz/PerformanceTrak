@@ -9,5 +9,7 @@ namespace PerformanceTrakFunctions.Repository
         Task<TableResult> Add(UserEntity entity);
 
         Task<UserEntity> Get(string partitionKey, string rowKey);
+
+        Task<TableResult> Update(UserEntity entity);
     }
 }

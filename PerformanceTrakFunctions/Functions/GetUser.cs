@@ -24,7 +24,7 @@ namespace PerformanceTrakFunctions.Functions
         }
 
         [FunctionName("GetUser")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetUser/{partitionKey?}/{rowKey?}")] HttpRequest req, string partitionKey, string rowKey, ILogger log)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetUser/{partitionKey?}/{rowKey?}")] HttpRequest req, string partitionKey, string rowKey, ILogger log)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace PerformanceTrakFunctions.Functions
                     return new BadRequestObjectResult(new { error = true, message = "Please Pass both PartitionKey and RowKey" });
                 }
 
-                return new OkObjectResult(await _userRepository.Get(partitionKey, rowKey));
+                return new OkObjectResult(_userRepository.Get(partitionKey, rowKey).Result);
             }
             catch (Exception ex)
             {

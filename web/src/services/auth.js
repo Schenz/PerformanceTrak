@@ -69,14 +69,73 @@ export const logout = () => {
   }
 };
 
-export const getProfile = () => {
-  return user;
-};
-
 export const tokens = {
   idToken: false,
   accessToken: false,
 };
+
+export function getUser() {
+  const apiUrl = process.env.GATSBY_GET_USER_FUNCTION_ENDPOINT;
+
+  const options = {
+    method: 'GET',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${tokens.accessToken}`
+    },
+  };
+
+  setUser(parseJwt(tokens.idToken));
+  
+  var partitionKey = user.family_name.substring(0, 1);
+  var rowKey = user.id;
+
+  return fetch(`${apiUrl}/${partitionKey}/${rowKey}`, options)
+    .then(
+      response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return null;
+        }
+      },
+      error => {
+        console.error(error);
+        navigate('/loginerror/');
+      }
+    )
+    .then(data => {
+      if (data !== null) {
+        setUser(data);
+        return user;
+      }
+    });
+}
+
+export function setUser(jwt) {
+  window.localStorage.setItem('jwt', JSON.stringify(jwt));
+
+  user = {
+    eTag: jwt.eTag || '',
+    id: jwt.sub || jwt.id,
+    name: jwt.name,
+    family_name: jwt.family_name,
+    given_name: jwt.given_name,
+    city: jwt.city || '',
+    country: jwt.country || '',
+    postalCode: jwt.postalCode || '',
+    state: jwt.state || '',
+    streetAddress: jwt.streetAddress || '',
+    isNew: jwt.newUser || false,
+  };
+
+  if (jwt.emails) {
+    user.email = jwt.emails[0] || '';
+  } else {
+    user.email = jwt.email || '';
+  }
+  window.localStorage.setItem('user', JSON.stringify(user));
+}
 
 let applicationId, scope, responseType, user, t, timer_is_on;
 
@@ -146,37 +205,17 @@ function parseJwt(token) {
   );
 }
 
-function setUser(jwt) {
-  window.localStorage.setItem('jwt', JSON.stringify(jwt));
-
-  user = {
-    eTag: jwt.eTag || '',
-    id: jwt.sub,
-    name: jwt.name,
-    family_name: jwt.family_name,
-    given_name: jwt.given_name,
-    city: jwt.city || '',
-    country: jwt.country || '',
-    postalCode: jwt.postalCode || '',
-    state: jwt.state || '',
-    streetAddress: jwt.streetAddress || '',
-    isNew: jwt.newUser || false,
-  };
-
-  if (jwt.emails) {
-    user.email = jwt.emails[0] || '';
-  } else {
-    user.email = jwt.email || '';
-  }
-  window.localStorage.setItem('user', JSON.stringify(user));
-}
-
 function online() {
   let session, currentTime;
 
   if (isBrowser) {
     session = hello('adB2CSignInSignUp').getAuthResponse();
     currentTime = new Date().getTime() / 1000; //seconds since 1 January 1970 00:00:00.
+    
+    if(session) {
+      tokens.idToken = session.id_token;
+      tokens.accessToken = session.access_token;
+    }
     
     return session && session.access_token && session.expires > currentTime;
   }
@@ -214,41 +253,6 @@ function addUser() {
   };
 
   fetch(apiUrl, options)
-    .then(
-      response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return null;
-        }
-      },
-      error => {
-        console.error(error);
-        navigate('/loginerror/');
-      }
-    )
-    .then(data => {
-      if (data !== null) {
-        setUser(data);
-      }
-    });
-}
-
-function getUser() {
-  const apiUrl = process.env.GATSBY_GET_USER_FUNCTION_ENDPOINT;
-
-  const options = {
-    method: 'GET',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${tokens.accessToken}`
-    },
-  };
-
-  var partitionKey = user.family_name.substring(0, 1);
-  var rowKey = user.id;
-
-  fetch(`${apiUrl}/${partitionKey}/${rowKey}`, options)
     .then(
       response => {
         if (response.ok) {

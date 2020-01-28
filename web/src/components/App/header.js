@@ -1,8 +1,8 @@
 import { Link } from 'gatsby';
 import React from 'react';
-import Logo from './images/logo.png';
+import Logo from '../images/logo.png';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import { login, loginDisplayType, logout, isAuthenticated, getProfile } from '../services/auth';
+import { login, loginDisplayType, logout, isAuthenticated, getUser } from '../../services/auth';
 
 export default class AppHeader extends React.Component {
   state = {
@@ -29,7 +29,7 @@ export default class AppHeader extends React.Component {
     }*/
   }
 
-  trackPageView(pathName) {
+  async trackPageView(pathName) {
     let previous_url;
 
     if (window.history.state == null) {
@@ -47,8 +47,7 @@ export default class AppHeader extends React.Component {
     appInsights.loadAppInsights();
 
     if (isAuthenticated()) {
-      var user = getProfile();
-      appInsights.setAuthenticatedUserContext(user.id);
+      appInsights.setAuthenticatedUserContext(await getUser().id);
     } else {
       appInsights.clearAuthenticatedUserContext();
     }

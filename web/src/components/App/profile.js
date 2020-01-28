@@ -1,5 +1,6 @@
 import React from 'react';
-import { getProfile, tokens } from '../services/auth';
+import { tokens, setUser, getUser } from '../../services/auth';
+import { navigate } from '@reach/router';
 
 export default class Profile extends React.Component {
   handleInputChange = event => {
@@ -27,23 +28,28 @@ export default class Profile extends React.Component {
       },
     };
 
-    fetch(apiUrl, options).then(
-      response => {
-        console.log('response: ', response);
-        if (response.ok) {
-          // navigate to confirmation page
-          //navigate("/app/profileupdated/");
-        } else {
-          // navigate to error page
-          //navigate("/app/profileupdateerror/");
+    fetch(apiUrl, options)
+      .then(
+        response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return null;
+          }
+        },
+        error => {
+          console.error(error);
+          navigate('/app/profileupdateerror/');
         }
-      },
-      error => {
-        console.error(error);
-        // navigate to error page
-        //navigate("/app/profileupdateerror/")
-      }
-    );
+      )
+      .then(data => {
+        if (data !== null) {
+          setUser(data.result);
+          navigate('/app/app_profile_updated/');
+        } else {
+          navigate('/app/profileupdateerror/');
+        }
+      });
   };
 
   constructor() {
@@ -51,8 +57,14 @@ export default class Profile extends React.Component {
 
     this.state = {
       hasUpdates: false,
-      profile: getProfile(),
+      profile: window.localStorage.getItem('user'),
     };
+  }
+  async componentDidMount() {
+    this.setState({
+      hasUpdates: true,
+      profile: await getUser(),
+    });
   }
 
   render() {
@@ -71,7 +83,7 @@ export default class Profile extends React.Component {
                     name="firstName"
                     placeholder="First Name"
                     required
-                    value={this.state.profile.given_name}
+                    value={this.state.profile.given_name || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>
@@ -83,7 +95,7 @@ export default class Profile extends React.Component {
                     name="lastName"
                     placeholder="Last Name"
                     required
-                    value={this.state.profile.family_name}
+                    value={this.state.profile.family_name || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>
@@ -95,7 +107,7 @@ export default class Profile extends React.Component {
                     name="fullName"
                     placeholder="Full Name"
                     required
-                    value={this.state.profile.name}
+                    value={this.state.profile.name || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>
@@ -107,7 +119,7 @@ export default class Profile extends React.Component {
                     name="email"
                     placeholder="Email"
                     required
-                    value={this.state.profile.email}
+                    value={this.state.profile.email || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>
@@ -119,7 +131,7 @@ export default class Profile extends React.Component {
                     name="streetAddress"
                     placeholder="Street Address"
                     required
-                    value={this.state.profile.streetAddress}
+                    value={this.state.profile.streetAddress || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>
@@ -131,7 +143,7 @@ export default class Profile extends React.Component {
                     name="city"
                     placeholder="City"
                     required
-                    value={this.state.profile.city}
+                    value={this.state.profile.city || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>
@@ -143,7 +155,7 @@ export default class Profile extends React.Component {
                     name="state"
                     placeholder="State"
                     required
-                    value={this.state.profile.state}
+                    value={this.state.profile.state || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>
@@ -155,7 +167,7 @@ export default class Profile extends React.Component {
                     name="postalCode"
                     placeholder="Zip Code"
                     required
-                    value={this.state.profile.postalCode}
+                    value={this.state.profile.postalCode || ''}
                     onChange={this.handleInputChange}
                   />
                 </div>

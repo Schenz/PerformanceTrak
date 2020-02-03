@@ -1,0 +1,5 @@
+Run this command at solution root to run all tests in all projects and build opencover format
+dotnet test /p:CollectCoverage=true /p:Exclude=\"[*]PerformanceTrakFunctions.Repository*,[*]PerformanceTrakFunctions.Security*,[*]PerformanceTrakFunctions.Startup*\" /p:CoverletOutput='./TestResults/' /p:CoverletOutputFormat=opencover
+
+Run this command at solution root to take all coverage reports and build a merged HTML coverage report
+tools/ReportGenerator -reports:./*/testresults/coverage.opencover.xml -targetdir:./TestResults

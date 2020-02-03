@@ -76,17 +76,18 @@ export const tokens = {
 
 export function getUser() {
   const apiUrl = process.env.GATSBY_GET_USER_FUNCTION_ENDPOINT;
+  const apiRoleUrl = process.env.GATSBY_GET_USER_ROLES_FUNCTION_ENDPOINT;
 
   const options = {
     method: 'GET',
-    headers: { 
+    headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${tokens.accessToken}`
+      Authorization: `Bearer ${tokens.accessToken}`,
     },
   };
 
   setUser(parseJwt(tokens.idToken));
-  
+
   var partitionKey = user.family_name.substring(0, 1);
   var rowKey = user.id;
 
@@ -106,8 +107,32 @@ export function getUser() {
     )
     .then(data => {
       if (data !== null) {
-        setUser(data);
-        return user;
+        return fetch(`${apiRoleUrl}/${user.id}`, options)
+          .then(
+            response => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                return null;
+              }
+            },
+            error => {
+              console.error(error);
+              navigate('/loginerror/');
+            }
+          )
+          .then(roleData => {
+            if (roleData !== null) {
+              roleData.forEach(role => {
+                if (!user.roles.includes(role.roleName)) {
+                  user.roles.push(role.roleName);
+                }
+              });
+            }
+
+            setUser(data);
+            return user;
+          });
       }
     });
 }
@@ -127,6 +152,7 @@ export function setUser(jwt) {
     state: jwt.state || '',
     streetAddress: jwt.streetAddress || '',
     isNew: jwt.newUser || false,
+    roles: user.roles || [],
   };
 
   if (jwt.emails) {
@@ -134,6 +160,7 @@ export function setUser(jwt) {
   } else {
     user.email = jwt.email || '';
   }
+
   window.localStorage.setItem('user', JSON.stringify(user));
 }
 
@@ -211,12 +238,12 @@ function online() {
   if (isBrowser) {
     session = hello('adB2CSignInSignUp').getAuthResponse();
     currentTime = new Date().getTime() / 1000; //seconds since 1 January 1970 00:00:00.
-    
-    if(session) {
+
+    if (session) {
       tokens.idToken = session.id_token;
       tokens.accessToken = session.access_token;
     }
-    
+
     return session && session.access_token && session.expires > currentTime;
   }
 }
@@ -247,9 +274,10 @@ function addUser() {
   const options = {
     method: 'POST',
     body: JSON.stringify(user),
-    headers: { 
-      'Content-Type': 'application/json' },
-      'Authorization': `Bearer ${tokens.accessToken}`
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    Authorization: `Bearer ${tokens.accessToken}`,
   };
 
   fetch(apiUrl, options)

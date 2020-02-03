@@ -45,7 +45,7 @@ namespace PerformanceTrakFunctions.Functions
                 }
 
                 entity.PartitionKey = entity.RoleName.Substring(0, 1);
-                entity.RowKey = entity.Id.ToString();
+                entity.RowKey = entity.UserId.ToString();
 
                 return new CreatedResult("", _userRoleRepository.Add(entity).Result);
             }

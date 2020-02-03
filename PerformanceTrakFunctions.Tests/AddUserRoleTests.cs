@@ -62,7 +62,7 @@ namespace PerformanceTrakFunctions.Tests
 
             var userEntity = new UserRoleEntity()
             {
-                Id = "TEST",
+                UserId = "TEST",
                 RoleName = "TestRole",
             };
 
@@ -71,11 +71,11 @@ namespace PerformanceTrakFunctions.Tests
             tableResult.HttpStatusCode = StatusCodes.Status201Created;
             userRoleRepository.Setup(t => t.Add(It.IsAny<UserRoleEntity>())).Returns(Task.FromResult(tableResult));
 
-            var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"roleName\": \"TestRole\",}");
+            var request = TestFactory.CreateHttpRequest("{\"userId\": \"TEST\",\"roleName\": \"TestRole\",}");
             var response = (CreatedResult)_fixture.Run(request, testLogger);
             Assert.AreEqual(StatusCodes.Status201Created, response.StatusCode);
             var returnEntity = (UserRoleEntity)((TableResult)response.Value).Result;
-            Assert.AreEqual(userEntity.Id, returnEntity.Id);
+            Assert.AreEqual(userEntity.UserId, returnEntity.UserId);
             Assert.AreEqual(userEntity.RoleName, returnEntity.RoleName);
         }
 
@@ -88,7 +88,7 @@ namespace PerformanceTrakFunctions.Tests
             var exception = new StorageException("Conflict");
             userRoleRepository.Setup(t => t.Add(It.IsAny<UserRoleEntity>())).Throws(exception);
 
-            var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"roleName\": \"TestRole\",}");
+            var request = TestFactory.CreateHttpRequest("{\"userId\": \"TEST\",\"roleName\": \"TestRole\",}");
             var response = (ConflictObjectResult)_fixture.Run(request, testLogger);
             Assert.AreEqual(StatusCodes.Status409Conflict, response.StatusCode);
         }
@@ -102,7 +102,7 @@ namespace PerformanceTrakFunctions.Tests
             var exception = new StorageException("");
             userRoleRepository.Setup(t => t.Add(It.IsAny<UserRoleEntity>())).Throws(exception);
 
-            var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"roleName\": \"TestRole\",}");
+            var request = TestFactory.CreateHttpRequest("{\"userId\": \"TEST\",\"roleName\": \"TestRole\",}");
             var response = (BadRequestObjectResult)_fixture.Run(request, testLogger);
             Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
         }
@@ -116,7 +116,7 @@ namespace PerformanceTrakFunctions.Tests
             var exception = new NullReferenceException("");
             userRoleRepository.Setup(t => t.Add(It.IsAny<UserRoleEntity>())).Throws(exception);
 
-            var request = TestFactory.CreateHttpRequest("{\"id\": \"TEST\",\"roleName\": \"TestRole\",}");
+            var request = TestFactory.CreateHttpRequest("{\"userId\": \"TEST\",\"roleName\": \"TestRole\",}");
             var response = (BadRequestObjectResult)_fixture.Run(request, testLogger);
             Assert.AreEqual(StatusCodes.Status400BadRequest, response.StatusCode);
         }

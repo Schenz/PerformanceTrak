@@ -8,11 +8,11 @@ namespace PerformanceTrakFunctions.Repository
 {
     public class BaseRepository
     {
-        public static async Task<CloudTable> GetTable()
+        public static async Task<CloudTable> GetTable(string tName)
         {
             var environment = (Environments)int.Parse(Environment.GetEnvironmentVariable("ENVIRONMENT"));
             var environmentString = $"{environment.ToString()}";
-            var tableName = $"Users{(environment != Environments.PROD ? environmentString : string.Empty)}";
+            var tableName = $"{tName}{(environment != Environments.PROD ? environmentString : string.Empty)}";
             var table = CloudStorageAccount
                 .Parse(Environment.GetEnvironmentVariable("TABLESTORECONNECTIONSTRING"))
                 .CreateCloudTableClient()

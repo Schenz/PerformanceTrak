@@ -8,7 +8,7 @@ namespace PerformanceTrakFunctions.Repository
     {
         Task<TableResult> Add(UserRoleEntity entity);
 
-        Task<UserRoleEntity> Get(string partitionKey, string rowKey);
+        Task<TableQuerySegment<UserRoleEntity>> Get(string userId);
 
         Task<TableResult> Update(UserRoleEntity entity);
     }

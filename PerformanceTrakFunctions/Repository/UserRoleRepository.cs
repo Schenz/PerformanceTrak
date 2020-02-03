@@ -6,13 +6,21 @@ namespace PerformanceTrakFunctions.Repository
 {
     public class UserRoleRepository : BaseRepository, IUserRoleRepository
     {
-        public async Task<TableResult> Add(UserRoleEntity entity) => await (await GetTable()).ExecuteAsync(TableOperation.Insert(entity));
+        public async Task<TableResult> Add(UserRoleEntity entity) => await (await GetTable("UserRoles")).ExecuteAsync(TableOperation.Insert(entity));
 
-        public async Task<UserRoleEntity> Get(string partitionKey, string rowKey) => (UserRoleEntity)(await (await GetTable()).ExecuteAsync(TableOperation.Retrieve<UserRoleEntity>(partitionKey, rowKey))).Result;
+        public async Task<TableQuerySegment<UserRoleEntity>> Get(string userId)
+        {
+            CloudTable cloudTable = await GetTable("UserRoles");
 
-        public async Task<TableResult> Update (UserRoleEntity entity) {
-            var table = await GetTable();
-            
+            TableQuery<UserRoleEntity> userIdQuery = new TableQuery<UserRoleEntity>().Where(TableQuery.GenerateFilterCondition("UserId", QueryComparisons.Equal, userId));
+
+            return await cloudTable.ExecuteQuerySegmentedAsync(userIdQuery, new TableContinuationToken());
+        }
+        
+        public async Task<TableResult> Update(UserRoleEntity entity)
+        {
+            var table = await GetTable("UserRoles");
+
             entity.ETag = "*";
             var updatedEntity = await table.ExecuteAsync(TableOperation.Merge(entity));
 

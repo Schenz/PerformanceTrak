@@ -5,8 +5,8 @@ namespace PerformanceTrakFunctions.Models
 {
     public class UserRoleEntity : TableEntity
     {
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        [JsonProperty(PropertyName = "userId")]
+        public string UserId { get; set; }
 
         [JsonProperty(PropertyName = "roleName")]
         public string RoleName { get; set; }

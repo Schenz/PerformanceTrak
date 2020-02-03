@@ -22,6 +22,7 @@ namespace PerformanceTrakFunctions
             // Register the access token provider as a singleton
             builder.Services.AddSingleton<IAccessTokenProvider, AccessTokenProvider>(s => new AccessTokenProvider(audience, issuer));
             builder.Services.AddSingleton<IUserRepository, UserRepository>(s => new UserRepository());
+            builder.Services.AddSingleton<IUserRoleRepository, UserRoleRepository>(s => new UserRoleRepository());
             builder.Services.AddSingleton<ISendGridClient, MySendGridClient>(s => new MySendGridClient());
         }
     }

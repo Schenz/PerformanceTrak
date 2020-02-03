@@ -1,0 +1,15 @@
+GET ACCESS TOKEN:
+POST https://login.microsoftonline.com/e97d1dfb-9447-4fbd-9f09-eb4c98ef0a16/oauth2/v2.0/token HTTP/1.1
+Host: login.microsoftonline.com
+Content-Type: application/x-www-form-urlencoded
+
+client_id=27d341d7-c9cf-409d-a134-cf8fe167463e
+&scope=https://graph.microsoft.com/.default
+&client_secret=3Lu0E:6tc:CXJf/2_meO2IY?Sh88AsAE
+&grant_type=client_credentials
+
+
+
+GET https://graph.microsoft.com/v1.0/groups/{id}/members?$select=id,displayName,description,createdDateTime,deletedDateTime,homepage,loginUrl HTTP/1.1
+
+https://graph.microsoft.com/v1.0/groups/27d341d7-c9cf-409d-a134-cf8fe167463e/members?$select=id,displayName,description,createdDateTime,deletedDateTime,homepage,loginUrl

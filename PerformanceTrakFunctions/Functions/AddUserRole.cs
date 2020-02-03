@@ -44,7 +44,7 @@ namespace PerformanceTrakFunctions.Functions
                     return new BadRequestObjectResult(new { error = true, message = "User not passed" });
                 }
 
-                entity.PartitionKey = entity.RoleName.Substring(0, 1);
+                entity.PartitionKey = entity.RoleName;
                 entity.RowKey = entity.UserId.ToString();
 
                 return new CreatedResult("", _userRoleRepository.Add(entity).Result);

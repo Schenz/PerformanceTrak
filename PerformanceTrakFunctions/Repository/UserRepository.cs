@@ -6,7 +6,7 @@ namespace PerformanceTrakFunctions.Repository
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        public async Task<TableResult> Add(UserEntity entity) => await (await GetTable("Users")).ExecuteAsync(TableOperation.Insert(entity));
+        public async Task<TableResult> Add(UserEntity entity, string tableName) => await (await GetTable(tableName)).ExecuteAsync(TableOperation.Insert(entity));
 
         public async Task<UserEntity> Get(string partitionKey, string rowKey) => (UserEntity)(await (await GetTable("Users")).ExecuteAsync(TableOperation.Retrieve<UserEntity>(partitionKey, rowKey))).Result;
 

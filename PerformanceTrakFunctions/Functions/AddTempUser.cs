@@ -9,19 +9,19 @@ using PerformanceTrakFunctions.Util;
 
 namespace PerformanceTrakFunctions.Functions
 {
-    public class AddUser
+    public class AddTempUser
     {
         private readonly IAccessTokenProvider _tokenProvider;
 
         private readonly IUserRepository _userRepository;
 
-        public AddUser(IAccessTokenProvider tokenProvider, IUserRepository userRepository)
+        public AddTempUser(IAccessTokenProvider tokenProvider, IUserRepository userRepository)
         {
             _tokenProvider = tokenProvider;
             _userRepository = userRepository;
         }
 
-        [FunctionName("AddUser")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "AddUser")] HttpRequest req, ILogger log) => NewUser.Add(_tokenProvider, _userRepository, req, log, "Users");
+        [FunctionName("AddTempUser")]
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "AddTempUser")] HttpRequest req, ILogger log) => NewUser.Add(_tokenProvider, _userRepository, req, log, "TempUsers");
     }
 }

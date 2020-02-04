@@ -15,9 +15,9 @@ using PerformanceTrakFunctions.Repository;
 namespace PerformanceTrakFunctions.Tests
 {
     [TestClass]
-    public class AddUserTests
+    public class AddTempUserTests
     {
-        private AddUser _fixture;
+        private AddTempUser _fixture;
 
         private Mock<IAccessTokenProvider> tokenProvider;
         private Mock<IUserRepository> userRepository;
@@ -29,7 +29,7 @@ namespace PerformanceTrakFunctions.Tests
         {
             tokenProvider = new Mock<IAccessTokenProvider>();
             userRepository = new Mock<IUserRepository>();
-            _fixture = new AddUser(tokenProvider.Object, userRepository.Object);
+            _fixture = new AddTempUser(tokenProvider.Object, userRepository.Object);
         }
 
         [TestMethod]

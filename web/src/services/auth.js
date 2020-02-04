@@ -75,6 +75,10 @@ export const tokens = {
 };
 
 export function getUser() {
+  if (online() && !ifObjectIsEmpty(user)) {
+    return user;
+  }
+
   const apiUrl = process.env.GATSBY_GET_USER_FUNCTION_ENDPOINT;
   const apiRoleUrl = process.env.GATSBY_GET_USER_ROLES_FUNCTION_ENDPOINT;
 
@@ -299,6 +303,14 @@ function addUser() {
         setUser(data);
       }
     });
+}
+
+function ifObjectIsEmpty(object) {
+  if (JSON.stringify(object) === JSON.stringify({})) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 startTimer();

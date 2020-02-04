@@ -2,7 +2,7 @@ import { Link } from 'gatsby';
 import React from 'react';
 import Logo from '../images/logo.png';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import { login, loginDisplayType, logout, isAuthenticated, getUser } from '../../services/auth';
+import { login, loginDisplayType, logout, isAuthenticated, getUser, isInRole } from '../../services/auth';
 
 export default class AppHeader extends React.Component {
   state = {
@@ -100,6 +100,13 @@ export default class AppHeader extends React.Component {
                       Profile
                     </Link>
                   </li>
+                  {isAuthenticated() && isInRole("GlobalAdmin") &&
+                  <li id="navManagement">
+                    <Link to="/app/addProfile/" state={this.state}>
+                      Add User
+                    </Link>
+                  </li>
+                  }
                   <li id="navSignin">
                     {isAuthenticated() ? (
                       <Link

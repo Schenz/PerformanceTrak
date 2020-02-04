@@ -14,10 +14,32 @@ export var loginDisplayType = {
 export const isAuthenticated = () => {
   if (online()) {
     return tokens.idToken !== false;
-  } else {
-    return false;
   }
+
+  return false;
 };
+
+export async function isInRole(role) {
+  console.log('isInRole');
+  if (online()) {
+    console.log('online');
+    if (ifObjectIsEmpty(user)) {
+      console.log('empty user');
+      await getUser();
+    }
+
+    if (user.roles === undefined) {
+      console.log('empty roles');
+      await getUser();
+    }
+
+    console.log('user: ', user);
+    console.log('user.roles.includes(role); ', user.roles.includes(role));
+    return user.roles.includes(role);
+  }
+
+  return false;
+}
 
 export const login = displayType => {
   stopTimer();

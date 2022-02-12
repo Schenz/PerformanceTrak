@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
-    "@microsoft/applicationinsights-web": "^2.3.1",
+    "@microsoft/applicationinsights-web": "^2.7.2",
     "@types/hellojs": "^1.16.3",
     "gatsby": "^2.18.11",
     "gatsby-image": "^2.2.34",
